@@ -1,0 +1,182 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Installer.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="760"
+        d:DesignHeight="480"
+        Width="760"
+        Height="480"
+        MinWidth="720"
+        MinHeight="440"
+        CanResize="False"
+        x:Class="Installer.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MyAvaloniaApp Installer"
+        Background="#F5F7FA">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="TextBlock.PageTitle">
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#172033"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style Selector="TextBlock.BodyText">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="LineHeight" Value="22"/>
+            <Setter Property="Foreground" Value="#4C566A"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="MinWidth" Value="92"/>
+            <Setter Property="MinHeight" Value="34"/>
+            <Setter Property="Padding" Value="16,6"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="*,Auto">
+        <Grid ColumnDefinitions="220,*">
+            <Border Background="#24324A">
+                <Grid RowDefinitions="Auto,*" Margin="28">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="MyAvaloniaApp"
+                                   Foreground="White"
+                                   FontSize="24"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock Text="Installer"
+                                   Foreground="#B8C2D8"
+                                   FontSize="14"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1"
+                                VerticalAlignment="Bottom"
+                                Spacing="10">
+                        <TextBlock Text="1  Welcome" Foreground="#DCE4F5"/>
+                        <TextBlock Text="2  Install folder" Foreground="#DCE4F5"/>
+                        <TextBlock Text="3  Install" Foreground="#DCE4F5"/>
+                        <TextBlock Text="4  Complete" Foreground="#DCE4F5"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Column="1" Margin="36,34,36,28">
+                <Grid IsVisible="{Binding IsWelcomePage}" RowDefinitions="Auto,Auto,*">
+                    <TextBlock Classes="PageTitle" Text="Welcome to MyAvaloniaApp Installer"/>
+                    <TextBlock Grid.Row="1"
+                               Classes="BodyText"
+                               Margin="0,18,0,0"
+                               Text="This wizard will install MyAvaloniaApp on your computer. The installer only extracts files to the folder you choose and does not change registry keys, environment variables, services, COM registration, PATH, or file associations."/>
+                    <TextBlock Grid.Row="2"
+                               Classes="BodyText"
+                               VerticalAlignment="Bottom"
+                               Text="Click Next to choose an installation folder."/>
+                </Grid>
+
+                <Grid IsVisible="{Binding IsDirectoryPage}" RowDefinitions="Auto,Auto,Auto,Auto,*">
+                    <TextBlock Classes="PageTitle" Text="Choose installation folder"/>
+                    <TextBlock Grid.Row="1"
+                               Classes="BodyText"
+                               Margin="0,18,0,18"
+                               Text="Select where MyAvaloniaApp files should be extracted. Existing files with the same names will be overwritten."/>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <TextBox Text="{Binding InstallDirectory, Mode=TwoWay}"/>
+                        <Button Grid.Column="1"
+                                Content="Browse..."
+                                Command="{Binding BrowseCommand}"/>
+                    </Grid>
+
+                    <Border Grid.Row="3"
+                            Margin="0,18,0,0"
+                            Padding="12"
+                            CornerRadius="6"
+                            Background="#FCE8E6"
+                            BorderBrush="#E77A6E"
+                            BorderThickness="1"
+                            IsVisible="{Binding HasError}">
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="#9E2B25"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+
+                    <TextBlock Grid.Row="4"
+                               Classes="BodyText"
+                               VerticalAlignment="Bottom"
+                               Text="Default folder: %LocalAppData%\MyAvaloniaApp"/>
+                </Grid>
+
+                <Grid IsVisible="{Binding IsProgressPage}" RowDefinitions="Auto,Auto,Auto,Auto,*">
+                    <TextBlock Classes="PageTitle" Text="Installing MyAvaloniaApp"/>
+                    <TextBlock Grid.Row="1"
+                               Classes="BodyText"
+                               Margin="0,18,0,26"
+                               Text="{Binding StatusText}"/>
+                    <ProgressBar Grid.Row="2"
+                                 Minimum="0"
+                                 Maximum="100"
+                                 Height="18"
+                                 Value="{Binding ProgressPercent}"/>
+                    <TextBlock Grid.Row="3"
+                               Margin="0,12,0,0"
+                               Text="{Binding CurrentFile}"
+                               Foreground="#697386"
+                               TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Row="4"
+                               VerticalAlignment="Bottom"
+                               Text="{Binding ProgressPercent, StringFormat='{}{0}%'}"
+                               Foreground="#4C566A"/>
+                </Grid>
+
+                <Grid IsVisible="{Binding IsCompletePage}" RowDefinitions="Auto,Auto,Auto,*">
+                    <TextBlock Classes="PageTitle" Text="Installation complete"/>
+                    <TextBlock Grid.Row="1"
+                               Classes="BodyText"
+                               Margin="0,18,0,20"
+                               Text="MyAvaloniaApp has been installed successfully."/>
+                    <CheckBox Grid.Row="2"
+                              Content="Launch MyAvaloniaApp"
+                              IsChecked="{Binding LaunchAfterInstall}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="1"
+                Background="White"
+                BorderBrush="#D8DEE9"
+                BorderThickness="0,1,0,0"
+                Padding="18">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                <Button Grid.Column="1"
+                        Content="Back"
+                        Margin="0,0,8,0"
+                        Command="{Binding BackCommand}"
+                        IsVisible="{Binding IsNotCompletePage}"/>
+                <Button Grid.Column="2"
+                        Content="Next"
+                        Margin="0,0,8,0"
+                        Command="{Binding NextCommand}"
+                        IsVisible="{Binding IsWelcomePage}"/>
+                <Button Grid.Column="2"
+                        Content="Install"
+                        Margin="0,0,8,0"
+                        Command="{Binding InstallCommand}"
+                        IsVisible="{Binding IsDirectoryPage}"/>
+                <Button Grid.Column="3"
+                        Content="Finish"
+                        Command="{Binding FinishCommand}"
+                        IsVisible="{Binding IsCompletePage}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
