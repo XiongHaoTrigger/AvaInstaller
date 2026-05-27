@@ -30,6 +30,7 @@ if (Test-Path -LiteralPath $payloadZipPath) {
 $payloadItems = Get-ChildItem -LiteralPath $payloadFullPath -Force
 if ($payloadItems.Count -eq 0) {
     Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
     $emptyZip = [System.IO.Compression.ZipFile]::Open($payloadZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
     $emptyZip.Dispose()
     Write-Host "Payload directory is empty; created an empty payload archive for installer smoke testing."

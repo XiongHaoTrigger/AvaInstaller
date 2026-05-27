@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        d:DesignWidth="760"
-        d:DesignHeight="480"
-        Width="760"
-        Height="480"
+        d:DesignWidth="800"
+        d:DesignHeight="520"
+        Width="800"
+        Height="520"
         MinWidth="720"
         MinHeight="440"
         CanResize="False"
@@ -15,7 +15,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="MyAvaloniaApp Installer"
-        Background="#F5F7FA">
+        Background="#F8FAFD"
+        FontFamily="Segoe UI">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -23,54 +24,194 @@
 
     <Window.Styles>
         <Style Selector="TextBlock.PageTitle">
-            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#172033"/>
+            <Setter Property="Foreground" Value="#202124"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
         <Style Selector="TextBlock.BodyText">
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="LineHeight" Value="22"/>
-            <Setter Property="Foreground" Value="#4C566A"/>
+            <Setter Property="LineHeight" Value="23"/>
+            <Setter Property="Foreground" Value="#5F6368"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style Selector="TextBlock.SideTitle">
+            <Setter Property="Foreground" Value="#202124"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style Selector="TextBlock.SideSubTitle">
+            <Setter Property="Foreground" Value="#5F6368"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style Selector="TextBlock.StepLabel">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBlock.StepLabel.active">
+            <Setter Property="Foreground" Value="#174EA6"/>
+        </Style>
+        <Style Selector="TextBlock.StepLabel.inactive">
+            <Setter Property="Foreground" Value="#5F6368"/>
+        </Style>
+        <Style Selector="Border.StepDot">
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="CornerRadius" Value="14"/>
+        </Style>
+        <Style Selector="Border.StepDot.active">
+            <Setter Property="Background" Value="#1A73E8"/>
+        </Style>
+        <Style Selector="Border.StepDot.inactive">
+            <Setter Property="Background" Value="#E8F0FE"/>
+        </Style>
+        <Style Selector="TextBlock.StepNumber">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style Selector="TextBlock.StepNumber.active">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        <Style Selector="TextBlock.StepNumber.inactive">
+            <Setter Property="Foreground" Value="#1A73E8"/>
         </Style>
         <Style Selector="Button">
             <Setter Property="MinWidth" Value="92"/>
-            <Setter Property="MinHeight" Value="34"/>
-            <Setter Property="Padding" Value="16,6"/>
+            <Setter Property="MinHeight" Value="38"/>
+            <Setter Property="Padding" Value="18,7"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#DADCE0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#1A73E8"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#F8FAFF"/>
+            <Setter Property="BorderBrush" Value="#C4D7F5"/>
+        </Style>
+        <Style Selector="Button:pressed">
+            <Setter Property="Background" Value="#E8F0FE"/>
+            <Setter Property="BorderBrush" Value="#8AB4F8"/>
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#1A73E8"/>
+            <Setter Property="BorderBrush" Value="#1A73E8"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        <Style Selector="Button.primary:pointerover">
+            <Setter Property="Background" Value="#1967D2"/>
+            <Setter Property="BorderBrush" Value="#1967D2"/>
+        </Style>
+        <Style Selector="Button.primary:pressed">
+            <Setter Property="Background" Value="#185ABC"/>
+            <Setter Property="BorderBrush" Value="#185ABC"/>
+        </Style>
+        <Style Selector="Button:disabled">
+            <Setter Property="Background" Value="#F1F3F4"/>
+            <Setter Property="BorderBrush" Value="#F1F3F4"/>
+            <Setter Property="Foreground" Value="#9AA0A6"/>
         </Style>
         <Style Selector="TextBox">
-            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="MinHeight" Value="40"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#DADCE0"/>
+            <Setter Property="Foreground" Value="#202124"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12,6"/>
         </Style>
     </Window.Styles>
 
     <Grid RowDefinitions="*,Auto">
-        <Grid ColumnDefinitions="220,*">
-            <Border Background="#24324A">
-                <Grid RowDefinitions="Auto,*" Margin="28">
-                    <StackPanel Spacing="8">
-                        <TextBlock Text="MyAvaloniaApp"
-                                   Foreground="White"
-                                   FontSize="24"
-                                   FontWeight="SemiBold"
-                                   TextWrapping="Wrap"/>
-                        <TextBlock Text="Installer"
-                                   Foreground="#B8C2D8"
-                                   FontSize="14"/>
+        <Grid ColumnDefinitions="248,*">
+            <Border Background="#F1F6FE"
+                    BorderBrush="#E8EAED"
+                    BorderThickness="0,0,1,0">
+                <Grid RowDefinitions="Auto,*" Margin="28,32">
+                    <StackPanel Spacing="12">
+                        <Border Width="40"
+                                Height="40"
+                                CornerRadius="12"
+                                Background="#1A73E8"
+                                HorizontalAlignment="Left">
+                            <TextBlock Text="A"
+                                       Foreground="White"
+                                       FontSize="22"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="SideTitle"
+                                       Text="MyAvaloniaApp"/>
+                            <TextBlock Classes="SideSubTitle"
+                                       Text="Installer"/>
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel Grid.Row="1"
                                 VerticalAlignment="Bottom"
-                                Spacing="10">
-                        <TextBlock Text="1  Welcome" Foreground="#DCE4F5"/>
-                        <TextBlock Text="2  Install folder" Foreground="#DCE4F5"/>
-                        <TextBlock Text="3  Install" Foreground="#DCE4F5"/>
-                        <TextBlock Text="4  Complete" Foreground="#DCE4F5"/>
+                                Spacing="14">
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding IsWelcomePage}">
+                            <Border Classes="StepDot active">
+                                <TextBlock Classes="StepNumber active" Text="1"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Welcome"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding !IsWelcomePage}">
+                            <Border Classes="StepDot inactive">
+                                <TextBlock Classes="StepNumber inactive" Text="1"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Welcome"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding IsDirectoryPage}">
+                            <Border Classes="StepDot active">
+                                <TextBlock Classes="StepNumber active" Text="2"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Install folder"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding !IsDirectoryPage}">
+                            <Border Classes="StepDot inactive">
+                                <TextBlock Classes="StepNumber inactive" Text="2"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Install folder"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding IsProgressPage}">
+                            <Border Classes="StepDot active">
+                                <TextBlock Classes="StepNumber active" Text="3"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Install"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding !IsProgressPage}">
+                            <Border Classes="StepDot inactive">
+                                <TextBlock Classes="StepNumber inactive" Text="3"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Install"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding IsCompletePage}">
+                            <Border Classes="StepDot active">
+                                <TextBlock Classes="StepNumber active" Text="4"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Complete"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding !IsCompletePage}">
+                            <Border Classes="StepDot inactive">
+                                <TextBlock Classes="StepNumber inactive" Text="4"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Complete"/>
+                        </Grid>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <Grid Grid.Column="1" Margin="36,34,36,28">
+            <Grid Grid.Column="1" Margin="42,40,42,32">
                 <Grid IsVisible="{Binding IsWelcomePage}" RowDefinitions="Auto,Auto,*">
                     <TextBlock Classes="PageTitle" Text="Welcome to MyAvaloniaApp Installer"/>
                     <TextBlock Grid.Row="1"
@@ -94,15 +235,16 @@
                         <TextBox Text="{Binding InstallDirectory, Mode=TwoWay}"/>
                         <Button Grid.Column="1"
                                 Content="Browse..."
+                                Classes="secondary"
                                 Command="{Binding BrowseCommand}"/>
                     </Grid>
 
                     <Border Grid.Row="3"
                             Margin="0,18,0,0"
-                            Padding="12"
-                            CornerRadius="6"
+                            Padding="14"
+                            CornerRadius="8"
                             Background="#FCE8E6"
-                            BorderBrush="#E77A6E"
+                            BorderBrush="#F4AEA9"
                             BorderThickness="1"
                             IsVisible="{Binding HasError}">
                         <TextBlock Text="{Binding ErrorMessage}"
@@ -125,7 +267,9 @@
                     <ProgressBar Grid.Row="2"
                                  Minimum="0"
                                  Maximum="100"
-                                 Height="18"
+                                 Height="10"
+                                 Foreground="#1A73E8"
+                                 Background="#E8F0FE"
                                  Value="{Binding ProgressPercent}"/>
                     <TextBlock Grid.Row="3"
                                Margin="0,12,0,0"
@@ -152,10 +296,10 @@
         </Grid>
 
         <Border Grid.Row="1"
-                Background="White"
-                BorderBrush="#D8DEE9"
+                Background="#FFFFFF"
+                BorderBrush="#E8EAED"
                 BorderThickness="0,1,0,0"
-                Padding="18">
+                Padding="22,16">
             <Grid ColumnDefinitions="*,Auto,Auto,Auto">
                 <Button Grid.Column="1"
                         Content="Back"
@@ -164,16 +308,19 @@
                         IsVisible="{Binding IsNotCompletePage}"/>
                 <Button Grid.Column="2"
                         Content="Next"
+                        Classes="primary"
                         Margin="0,0,8,0"
                         Command="{Binding NextCommand}"
                         IsVisible="{Binding IsWelcomePage}"/>
                 <Button Grid.Column="2"
                         Content="Install"
+                        Classes="primary"
                         Margin="0,0,8,0"
                         Command="{Binding InstallCommand}"
                         IsVisible="{Binding IsDirectoryPage}"/>
                 <Button Grid.Column="3"
                         Content="Finish"
+                        Classes="primary"
                         Command="{Binding FinishCommand}"
                         IsVisible="{Binding IsCompletePage}"/>
             </Grid>
