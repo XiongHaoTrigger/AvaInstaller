@@ -1,6 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Installer.App"
+             x:Class="AvaInstaller.App"
              RequestedThemeVariant="Light">
              <!-- The installer uses a light surface, so keep Fluent controls in light mode as well. -->
   

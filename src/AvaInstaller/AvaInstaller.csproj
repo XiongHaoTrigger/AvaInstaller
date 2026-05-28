@@ -7,7 +7,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <AssemblyName>MyAvaloniaAppInstaller</AssemblyName>
-        <RootNamespace>Installer</RootNamespace>
+        <RootNamespace>AvaInstaller</RootNamespace>
         <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <SelfContained>true</SelfContained>
@@ -18,7 +18,7 @@
         <AvaloniaResource Include="Assets\**"/>
         <EmbeddedResource Include="Resources\payload.zip"
                           Condition="Exists('Resources\payload.zip')"
-                          LogicalName="Installer.Resources.payload.zip"/>
+                          LogicalName="AvaInstaller.Resources.payload.zip"/>
     </ItemGroup>
 
     <ItemGroup>

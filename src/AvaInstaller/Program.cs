@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace Installer;
+namespace AvaInstaller;
 
 sealed class Program
 {

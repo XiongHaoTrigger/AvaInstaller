@@ -1,13 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Reflection;
-using Installer.Models;
+using AvaInstaller.Models;
 
-namespace Installer.Services;
+namespace AvaInstaller.Services;
 
 public sealed class PayloadExtractor : IPayloadExtractor
 {
-    private const string PayloadResourceName = "Installer.Resources.payload.zip";
+    private const string PayloadResourceName = "AvaInstaller.Resources.payload.zip";
     private const int BufferSize = 128 * 1024;
 
     public async Task ExtractAsync(

@@ -1,4 +1,4 @@
-namespace Installer.Services;
+namespace AvaInstaller.Services;
 
 public interface IFolderPickerService
 {

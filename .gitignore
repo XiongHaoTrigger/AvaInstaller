@@ -1,5 +1,16 @@
+# Build output
 bin/
 obj/
-/packages/
+artifacts/
+dist/
+
+# NuGet
+packages/
+
+# IDE and user-specific files
+.vs/
+.idea/
+*.user
+*.suo
 riderModule.iml
-/_ReSharper.Caches/
+_ReSharper.Caches/

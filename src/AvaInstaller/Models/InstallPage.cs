@@ -1,4 +1,4 @@
-namespace Installer.Models;
+namespace AvaInstaller.Models;
 
 public enum InstallPage
 {

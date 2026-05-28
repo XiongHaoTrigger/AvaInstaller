@@ -1,10 +1,10 @@
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Installer.Models;
-using Installer.Services;
+using AvaInstaller.Models;
+using AvaInstaller.Services;
 
-namespace Installer.ViewModels;
+namespace AvaInstaller.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {

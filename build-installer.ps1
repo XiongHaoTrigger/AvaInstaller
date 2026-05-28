@@ -1,6 +1,6 @@
 param(
     [string]$PayloadPath = ".\payload",
-    [string]$ProjectPath = ".\Installer\Installer.csproj",
+    [string]$ProjectPath = ".\src\AvaInstaller\AvaInstaller.csproj",
     [string]$Configuration = "Release",
     [ValidateSet("Aot", "SingleFile")]
     [string]$PublishMode = "Aot"

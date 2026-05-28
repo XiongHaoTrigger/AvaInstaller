@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 
-namespace Installer.Services;
+namespace AvaInstaller.Services;
 
 public sealed class FolderPickerService : IFolderPickerService
 {

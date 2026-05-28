@@ -1,12 +1,12 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Installer.Services;
-using Installer.ViewModels;
-using Installer.Views;
+using AvaInstaller.Services;
+using AvaInstaller.ViewModels;
+using AvaInstaller.Views;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Installer;
+namespace AvaInstaller;
 
 public partial class App : Application
 {

@@ -1,6 +1,6 @@
-using Installer.Models;
+using AvaInstaller.Models;
 
-namespace Installer.Services;
+namespace AvaInstaller.Services;
 
 public interface IPayloadExtractor
 {

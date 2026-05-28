@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer", "Installer\Installer.csproj", "{07D1450E-5BD1-422C-8377-2D45C0D5F722}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaInstaller", "src\AvaInstaller\AvaInstaller.csproj", "{07D1450E-5BD1-422C-8377-2D45C0D5F722}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
