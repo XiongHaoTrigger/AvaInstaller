@@ -4,7 +4,7 @@ namespace AvaInstaller.Services;
 
 public interface IPayloadExtractor
 {
-    Task ExtractAsync(
+    Task<PayloadExtractionResult> ExtractAsync(
         string targetDirectory,
         IProgress<InstallProgress> progress,
         CancellationToken cancellationToken);

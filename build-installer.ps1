@@ -11,31 +11,22 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $payloadFullPath = [System.IO.Path]::GetFullPath((Join-Path $root $PayloadPath))
 $projectFullPath = [System.IO.Path]::GetFullPath((Join-Path $root $ProjectPath))
-$resourcesDirectory = Join-Path (Split-Path -Parent $projectFullPath) "Resources"
-$payloadZipPath = Join-Path $resourcesDirectory "payload.zip"
 $distDirectory = Join-Path $root "dist"
+$payloadZipPath = Join-Path $distDirectory "payload.zip"
 
-if (-not (Test-Path -LiteralPath $payloadFullPath -PathType Container)) {
-    throw "Payload directory was not found: $payloadFullPath"
+$payloadIsDirectory = Test-Path -LiteralPath $payloadFullPath -PathType Container
+$payloadIsZipFile = (Test-Path -LiteralPath $payloadFullPath -PathType Leaf) -and
+    ([System.IO.Path]::GetExtension($payloadFullPath) -ieq ".zip")
+
+if (-not $payloadIsDirectory -and -not $payloadIsZipFile) {
+    throw "Payload path must be a directory or a .zip file: $payloadFullPath"
 }
 
-New-Item -ItemType Directory -Force -Path $resourcesDirectory | Out-Null
 New-Item -ItemType Directory -Force -Path $distDirectory | Out-Null
 
 if (Test-Path -LiteralPath $payloadZipPath) {
     Set-ItemProperty -LiteralPath $payloadZipPath -Name IsReadOnly -Value $false -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $payloadZipPath -Force
-}
-
-$payloadItems = Get-ChildItem -LiteralPath $payloadFullPath -Force
-if ($payloadItems.Count -eq 0) {
-    Add-Type -AssemblyName System.IO.Compression
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    $emptyZip = [System.IO.Compression.ZipFile]::Open($payloadZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
-    $emptyZip.Dispose()
-    Write-Host "Payload directory is empty; created an empty payload archive for installer smoke testing."
-} else {
-    Compress-Archive -Path (Join-Path $payloadFullPath "*") -DestinationPath $payloadZipPath -CompressionLevel Optimal -Force
 }
 
 $publishProperties = @(
@@ -135,4 +126,20 @@ if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
     throw "Publish finished, but installer exe was not found: $installerPath"
 }
 
+if ($payloadIsZipFile) {
+    Copy-Item -LiteralPath $payloadFullPath -Destination $payloadZipPath -Force
+} else {
+    $payloadItems = Get-ChildItem -LiteralPath $payloadFullPath -Force
+    if ($payloadItems.Count -eq 0) {
+        Add-Type -AssemblyName System.IO.Compression
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $emptyZip = [System.IO.Compression.ZipFile]::Open($payloadZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
+        $emptyZip.Dispose()
+        Write-Host "Payload directory is empty; created an empty payload archive for installer smoke testing."
+    } else {
+        Compress-Archive -Path (Join-Path $payloadFullPath "*") -DestinationPath $payloadZipPath -CompressionLevel Optimal -Force
+    }
+}
+
 Write-Host "Created installer: $installerPath"
+Write-Host "Created external payload: $payloadZipPath"

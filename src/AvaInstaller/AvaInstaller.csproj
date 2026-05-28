@@ -16,9 +16,6 @@
 
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
-        <EmbeddedResource Include="Resources\payload.zip"
-                          Condition="Exists('Resources\payload.zip')"
-                          LogicalName="AvaInstaller.Resources.payload.zip"/>
     </ItemGroup>
 
     <ItemGroup>

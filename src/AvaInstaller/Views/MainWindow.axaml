@@ -4,68 +4,81 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        d:DesignWidth="800"
-        d:DesignHeight="520"
-        Width="800"
-        Height="520"
-        MinWidth="720"
-        MinHeight="440"
+        d:DesignWidth="860"
+        d:DesignHeight="560"
+        Width="860"
+        Height="560"
+        MinWidth="760"
+        MinHeight="480"
         CanResize="False"
+        WindowStartupLocation="CenterScreen"
         x:Class="AvaInstaller.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="MyAvaloniaApp Installer"
-        Background="#F8FAFD"
+        Background="#E8EDF2"
         FontFamily="Segoe UI">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
+    <!--
+        主窗口采用医疗软件/工业设备常见的信息架构：
+        左侧为设备品牌区和流程状态，右侧为当前操作页，底部为固定操作栏。
+        只调整视觉样式，不改变 ViewModel 中的页面状态和命令绑定。
+    -->
     <Window.Styles>
         <Style Selector="TextBlock.PageTitle">
-            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontSize" Value="27"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#202124"/>
+            <Setter Property="Foreground" Value="#152934"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
         <Style Selector="TextBlock.BodyText">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="LineHeight" Value="23"/>
-            <Setter Property="Foreground" Value="#5F6368"/>
+            <Setter Property="Foreground" Value="#52636D"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
+        <Style Selector="TextBlock.CaptionText">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#6D7E88"/>
+        </Style>
         <Style Selector="TextBlock.SideTitle">
-            <Setter Property="Foreground" Value="#202124"/>
-            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Foreground" Value="#EEF7F9"/>
+            <Setter Property="FontSize" Value="22"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
         <Style Selector="TextBlock.SideSubTitle">
-            <Setter Property="Foreground" Value="#5F6368"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#93AAB5"/>
+            <Setter Property="FontSize" Value="12"/>
         </Style>
         <Style Selector="TextBlock.StepLabel">
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style Selector="TextBlock.StepLabel.active">
-            <Setter Property="Foreground" Value="#174EA6"/>
+            <Setter Property="Foreground" Value="#F4FBFC"/>
         </Style>
         <Style Selector="TextBlock.StepLabel.inactive">
-            <Setter Property="Foreground" Value="#5F6368"/>
+            <Setter Property="Foreground" Value="#8FA4AE"/>
         </Style>
         <Style Selector="Border.StepDot">
-            <Setter Property="Width" Value="28"/>
-            <Setter Property="Height" Value="28"/>
-            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="BorderThickness" Value="1"/>
         </Style>
         <Style Selector="Border.StepDot.active">
-            <Setter Property="Background" Value="#1A73E8"/>
+            <Setter Property="Background" Value="#00A6B2"/>
+            <Setter Property="BorderBrush" Value="#76E2E8"/>
         </Style>
         <Style Selector="Border.StepDot.inactive">
-            <Setter Property="Background" Value="#E8F0FE"/>
+            <Setter Property="Background" Value="#233741"/>
+            <Setter Property="BorderBrush" Value="#3C515C"/>
         </Style>
         <Style Selector="TextBlock.StepNumber">
             <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -77,131 +90,208 @@
             <Setter Property="Foreground" Value="#FFFFFF"/>
         </Style>
         <Style Selector="TextBlock.StepNumber.inactive">
-            <Setter Property="Foreground" Value="#1A73E8"/>
+            <Setter Property="Foreground" Value="#9EB0B9"/>
         </Style>
         <Style Selector="Button">
-            <Setter Property="MinWidth" Value="92"/>
-            <Setter Property="MinHeight" Value="38"/>
+            <Setter Property="MinWidth" Value="96"/>
+            <Setter Property="MinHeight" Value="40"/>
             <Setter Property="Padding" Value="18,7"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="#DADCE0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#F8FAFB"/>
+            <Setter Property="BorderBrush" Value="#95A9B3"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Foreground" Value="#1A73E8"/>
-            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#1D3C49"/>
+            <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
+        <!-- Siemens 工业体系强调交互元素有明确状态；secondary hover 使用浅绿/蓝系反馈。 -->
         <Style Selector="Button:pointerover">
-            <Setter Property="Background" Value="#F8FAFF"/>
-            <Setter Property="BorderBrush" Value="#C4D7F5"/>
+            <Setter Property="Background" Value="#CFF7E8"/>
+            <Setter Property="BorderBrush" Value="#00CCCC"/>
+            <Setter Property="Foreground" Value="#003750"/>
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#CFF7E8"/>
+            <Setter Property="BorderBrush" Value="#00CCCC"/>
+            <Setter Property="TextBlock.Foreground" Value="#003750"/>
         </Style>
         <Style Selector="Button:pressed">
-            <Setter Property="Background" Value="#E8F0FE"/>
-            <Setter Property="BorderBrush" Value="#8AB4F8"/>
+            <Setter Property="Background" Value="#9FE9D0"/>
+            <Setter Property="BorderBrush" Value="#009999"/>
+            <Setter Property="Foreground" Value="#002B3A"/>
+        </Style>
+        <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#9FE9D0"/>
+            <Setter Property="BorderBrush" Value="#009999"/>
+            <Setter Property="TextBlock.Foreground" Value="#002B3A"/>
         </Style>
         <Style Selector="Button.primary">
-            <Setter Property="Background" Value="#1A73E8"/>
-            <Setter Property="BorderBrush" Value="#1A73E8"/>
+            <Setter Property="Background" Value="#008A96"/>
+            <Setter Property="BorderBrush" Value="#008A96"/>
             <Setter Property="Foreground" Value="#FFFFFF"/>
         </Style>
+        <Style Selector="Button.primary /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#008A96"/>
+            <Setter Property="BorderBrush" Value="#008A96"/>
+            <Setter Property="TextBlock.Foreground" Value="#FFFFFF"/>
+        </Style>
         <Style Selector="Button.primary:pointerover">
-            <Setter Property="Background" Value="#1967D2"/>
-            <Setter Property="BorderBrush" Value="#1967D2"/>
+            <Setter Property="Background" Value="#00A6B2"/>
+            <Setter Property="BorderBrush" Value="#41F27D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#00A6B2"/>
+            <Setter Property="BorderBrush" Value="#41F27D"/>
+            <Setter Property="TextBlock.Foreground" Value="#FFFFFF"/>
         </Style>
         <Style Selector="Button.primary:pressed">
-            <Setter Property="Background" Value="#185ABC"/>
-            <Setter Property="BorderBrush" Value="#185ABC"/>
+            <Setter Property="Background" Value="#006B76"/>
+            <Setter Property="BorderBrush" Value="#00A6B2"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#006B76"/>
+            <Setter Property="BorderBrush" Value="#00A6B2"/>
+            <Setter Property="TextBlock.Foreground" Value="#FFFFFF"/>
         </Style>
         <Style Selector="Button:disabled">
-            <Setter Property="Background" Value="#F1F3F4"/>
-            <Setter Property="BorderBrush" Value="#F1F3F4"/>
-            <Setter Property="Foreground" Value="#9AA0A6"/>
+            <Setter Property="Background" Value="#EEF2F4"/>
+            <Setter Property="BorderBrush" Value="#D2DCE1"/>
+            <Setter Property="Foreground" Value="#9AA8AF"/>
+        </Style>
+        <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#EEF2F4"/>
+            <Setter Property="BorderBrush" Value="#D2DCE1"/>
+            <Setter Property="TextBlock.Foreground" Value="#9AA8AF"/>
         </Style>
         <Style Selector="TextBox">
-            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="MinHeight" Value="42"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="#DADCE0"/>
-            <Setter Property="Foreground" Value="#202124"/>
-            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Background" Value="#F9FBFC"/>
+            <Setter Property="BorderBrush" Value="#AEBFC7"/>
+            <Setter Property="Foreground" Value="#152934"/>
+            <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="Padding" Value="12,6"/>
+        </Style>
+        <Style Selector="ProgressBar">
+            <Setter Property="Foreground" Value="#00A6B2"/>
+            <Setter Property="Background" Value="#D5E1E6"/>
         </Style>
     </Window.Styles>
 
     <Grid RowDefinitions="*,Auto">
-        <Grid ColumnDefinitions="248,*">
-            <Border Background="#F1F6FE"
-                    BorderBrush="#E8EAED"
+        <Grid ColumnDefinitions="270,*">
+            <!-- 左侧工业设备风格侧栏：用深色面板承载品牌、状态和流程导航。 -->
+            <Border Background="#172A34"
+                    BorderBrush="#0F1C23"
                     BorderThickness="0,0,1,0">
-                <Grid RowDefinitions="Auto,*" Margin="28,32">
-                    <StackPanel Spacing="12">
-                        <Border Width="40"
-                                Height="40"
-                                CornerRadius="12"
-                                Background="#1A73E8"
-                                HorizontalAlignment="Left">
-                            <TextBlock Text="A"
-                                       Foreground="White"
-                                       FontSize="22"
-                                       FontWeight="SemiBold"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel Spacing="4">
-                            <TextBlock Classes="SideTitle"
-                                       Text="MyAvaloniaApp"/>
-                            <TextBlock Classes="SideSubTitle"
-                                       Text="Installer"/>
-                        </StackPanel>
+                <Grid RowDefinitions="Auto,Auto,*" Margin="28,30">
+                    <StackPanel Spacing="14">
+                        <Grid ColumnDefinitions="48,*" ColumnSpacing="12">
+                            <Border Width="46"
+                                    Height="46"
+                                    CornerRadius="4"
+                                    Background="#00A6B2"
+                                    BorderBrush="#7FE3E9"
+                                    BorderThickness="1">
+                                <TextBlock Text="A"
+                                           Foreground="White"
+                                           FontSize="24"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                <TextBlock Classes="SideTitle" Text="MyAvaloniaApp"/>
+                                <TextBlock Classes="SideSubTitle" Text="Medical Workstation Installer"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Height="1" Background="#2E4651" Margin="0,8,0,0"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1"
+
+                    <!-- 状态区模拟医疗设备软件常见的 readiness/status 模块。 -->
+                    <Border Grid.Row="1"
+                            Margin="0,24,0,0"
+                            Padding="14"
+                            CornerRadius="4"
+                            Background="#203641"
+                            BorderBrush="#35505C"
+                            BorderThickness="1">
+                        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Border Width="10"
+                                    Height="10"
+                                    CornerRadius="5"
+                                    Background="#00C2A8"
+                                    VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="SYSTEM READY"
+                                       Foreground="#DDECEF"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Grid.Row="1"
+                                       Grid.ColumnSpan="2"
+                                       Margin="0,8,0,0"
+                                       Text="External payload deployment"
+                                       Foreground="#91A6B0"
+                                       FontSize="12"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- 每一步都保留 active/inactive 两组节点，用现有布尔属性控制显示。 -->
+                    <StackPanel Grid.Row="2"
                                 VerticalAlignment="Bottom"
-                                Spacing="14">
-                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding IsWelcomePage}">
+                                Spacing="15">
+                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12" IsVisible="{Binding IsWelcomePage}">
                             <Border Classes="StepDot active">
                                 <TextBlock Classes="StepNumber active" Text="1"/>
                             </Border>
                             <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Welcome"/>
                         </Grid>
-                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding !IsWelcomePage}">
+                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12" IsVisible="{Binding !IsWelcomePage}">
                             <Border Classes="StepDot inactive">
                                 <TextBlock Classes="StepNumber inactive" Text="1"/>
                             </Border>
                             <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Welcome"/>
                         </Grid>
 
-                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding IsDirectoryPage}">
+                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12" IsVisible="{Binding IsDirectoryPage}">
                             <Border Classes="StepDot active">
                                 <TextBlock Classes="StepNumber active" Text="2"/>
                             </Border>
                             <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Install folder"/>
                         </Grid>
-                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding !IsDirectoryPage}">
+                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12" IsVisible="{Binding !IsDirectoryPage}">
                             <Border Classes="StepDot inactive">
                                 <TextBlock Classes="StepNumber inactive" Text="2"/>
                             </Border>
                             <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Install folder"/>
                         </Grid>
 
-                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding IsProgressPage}">
+                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12" IsVisible="{Binding IsProgressPage}">
                             <Border Classes="StepDot active">
                                 <TextBlock Classes="StepNumber active" Text="3"/>
                             </Border>
                             <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Install"/>
                         </Grid>
-                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding !IsProgressPage}">
+                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12" IsVisible="{Binding !IsProgressPage}">
                             <Border Classes="StepDot inactive">
                                 <TextBlock Classes="StepNumber inactive" Text="3"/>
                             </Border>
                             <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Install"/>
                         </Grid>
 
-                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding IsCompletePage}">
+                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12" IsVisible="{Binding IsCompletePage}">
                             <Border Classes="StepDot active">
                                 <TextBlock Classes="StepNumber active" Text="4"/>
                             </Border>
                             <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Complete"/>
                         </Grid>
-                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12" IsVisible="{Binding !IsCompletePage}">
+                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12" IsVisible="{Binding !IsCompletePage}">
                             <Border Classes="StepDot inactive">
                                 <TextBlock Classes="StepNumber inactive" Text="4"/>
                             </Border>
@@ -211,101 +301,244 @@
                 </Grid>
             </Border>
 
-            <Grid Grid.Column="1" Margin="42,40,42,32">
-                <Grid IsVisible="{Binding IsWelcomePage}" RowDefinitions="Auto,Auto,*">
-                    <TextBlock Classes="PageTitle" Text="Welcome to MyAvaloniaApp Installer"/>
-                    <TextBlock Grid.Row="1"
-                               Classes="BodyText"
-                               Margin="0,18,0,0"
-                               Text="This wizard will install MyAvaloniaApp on your computer. The installer only extracts files to the folder you choose and does not change registry keys, environment variables, services, COM registration, PATH, or file associations."/>
-                    <TextBlock Grid.Row="2"
-                               Classes="BodyText"
-                               VerticalAlignment="Bottom"
-                               Text="Click Next to choose an installation folder."/>
-                </Grid>
-
-                <Grid IsVisible="{Binding IsDirectoryPage}" RowDefinitions="Auto,Auto,Auto,Auto,*">
-                    <TextBlock Classes="PageTitle" Text="Choose installation folder"/>
-                    <TextBlock Grid.Row="1"
-                               Classes="BodyText"
-                               Margin="0,18,0,18"
-                               Text="Select where MyAvaloniaApp files should be extracted. Existing files with the same names will be overwritten."/>
-
-                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                        <TextBox Text="{Binding InstallDirectory, Mode=TwoWay}"/>
-                        <Button Grid.Column="1"
-                                Content="Browse..."
-                                Classes="secondary"
-                                Command="{Binding BrowseCommand}"/>
-                    </Grid>
-
-                    <Border Grid.Row="3"
-                            Margin="0,18,0,0"
-                            Padding="14"
-                            CornerRadius="8"
-                            Background="#FCE8E6"
-                            BorderBrush="#F4AEA9"
+            <!-- 右侧为当前页面内容区；各页面通过 IsVisible 和 ViewModel 状态切换。 -->
+            <Border Grid.Column="1"
+                    Margin="0"
+                    Background="#EEF3F6">
+                <Grid Margin="46,42,46,34">
+                    <Border Background="#F9FBFC"
+                            BorderBrush="#CAD6DC"
                             BorderThickness="1"
-                            IsVisible="{Binding HasError}">
-                        <TextBlock Text="{Binding ErrorMessage}"
-                                   Foreground="#9E2B25"
-                                   TextWrapping="Wrap"/>
+                            CornerRadius="4"
+                            Padding="30">
+                        <Grid>
+                            <Grid IsVisible="{Binding IsWelcomePage}" RowDefinitions="Auto,Auto,*,Auto">
+                                <TextBlock Classes="CaptionText" Text="INSTALLATION WIZARD"/>
+                                <TextBlock Grid.Row="1"
+                                           Classes="PageTitle"
+                                           Margin="0,8,0,18"
+                                           Text="Welcome to MyAvaloniaApp Installer"/>
+                                <TextBlock Grid.Row="2"
+                                           Classes="BodyText"
+                                           Text="This wizard will install MyAvaloniaApp on your computer. The installer only extracts files to the folder you choose and does not change registry keys, environment variables, services, COM registration, PATH, or file associations."/>
+                                <TextBlock Grid.Row="3"
+                                           Classes="BodyText"
+                                           Text="Click Next to choose an installation folder."/>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsDirectoryPage}" RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
+                                <TextBlock Classes="CaptionText" Text="TARGET LOCATION"/>
+                                <TextBlock Grid.Row="1"
+                                           Classes="PageTitle"
+                                           Margin="0,8,0,18"
+                                           Text="Choose installation folder"/>
+                                <TextBlock Grid.Row="2"
+                                           Classes="BodyText"
+                                           Margin="0,0,0,18"
+                                           Text="Select where MyAvaloniaApp files should be extracted. Existing files with the same names will be overwritten."/>
+
+                                <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                    <TextBox Text="{Binding InstallDirectory, Mode=TwoWay}"/>
+                                    <Button Grid.Column="1"
+                                            Content="Browse..."
+                                            Command="{Binding BrowseCommand}"/>
+                                </Grid>
+
+                                <Border Grid.Row="4"
+                                        Margin="0,18,0,0"
+                                        Padding="14"
+                                        CornerRadius="4"
+                                        Background="#FFF3EF"
+                                        BorderBrush="#E3A08C"
+                                        BorderThickness="1"
+                                        IsVisible="{Binding HasError}">
+                                    <TextBlock Text="{Binding ErrorMessage}"
+                                               Foreground="#8B2F22"
+                                               TextWrapping="Wrap"/>
+                                </Border>
+
+                                <TextBlock Grid.Row="5"
+                                           Classes="BodyText"
+                                           Text="Default folder: %LocalAppData%\MyAvaloniaApp"/>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsProgressPage}" RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
+                                <TextBlock Classes="CaptionText" Text="DEPLOYMENT"/>
+                                <TextBlock Grid.Row="1"
+                                           Classes="PageTitle"
+                                           Margin="0,8,0,18"
+                                           Text="Installing MyAvaloniaApp"/>
+                                <TextBlock Grid.Row="2"
+                                           Classes="BodyText"
+                                           Margin="0,0,0,26"
+                                           Text="{Binding StatusText}"/>
+                                <ProgressBar Grid.Row="3"
+                                             Minimum="0"
+                                             Maximum="100"
+                                             Height="12"
+                                             Value="{Binding ProgressPercent}"/>
+                                <TextBlock Grid.Row="4"
+                                           Margin="0,12,0,0"
+                                           Text="{Binding CurrentFile}"
+                                           Foreground="#5B6D76"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Grid.Row="5"
+                                           Text="{Binding ProgressPercent, StringFormat='{}{0}%'}"
+                                           Foreground="#152934"
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsCompletePage}" RowDefinitions="Auto,Auto,Auto,Auto,*">
+                                <TextBlock Classes="CaptionText" Text="FINISHED"/>
+                                <TextBlock Grid.Row="1"
+                                           Classes="PageTitle"
+                                           Margin="0,8,0,18"
+                                           Text="Installation complete"/>
+                                <TextBlock Grid.Row="2"
+                                           Classes="BodyText"
+                                           Margin="0,0,0,20"
+                                           Text="MyAvaloniaApp has been installed successfully."/>
+                                <CheckBox Grid.Row="3"
+                                          Content="Launch MyAvaloniaApp"
+                                          IsChecked="{Binding LaunchAfterInstall}"/>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsInstalledPage}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+                                <TextBlock Classes="CaptionText" Text="MAINTENANCE MODE"/>
+                                <TextBlock Grid.Row="1"
+                                           Classes="PageTitle"
+                                           Margin="0,8,0,18"
+                                           Text="MyAvaloniaApp is already installed"/>
+                                <TextBlock Grid.Row="2"
+                                           Classes="BodyText"
+                                           Text="{Binding InstalledLocation, StringFormat='Install location: {0}'}"/>
+                                <TextBlock Grid.Row="3"
+                                           Classes="BodyText"
+                                           Margin="0,8,0,22"
+                                           Text="{Binding InstalledVersion, StringFormat='Installed version: {0}'}"/>
+                                <Grid Grid.Row="4" ColumnDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="10">
+                                    <Button Content="Upgrade"
+                                            Command="{Binding UpgradeCommand}"/>
+                                    <Button Grid.Column="1"
+                                            Content="Repair"
+                                            Command="{Binding RepairCommand}"/>
+                                    <Button Grid.Column="2"
+                                            Content="Uninstall"
+                                            Classes="primary"
+                                            Command="{Binding ShowUninstallCommand}"/>
+                                    <Button Grid.Column="3"
+                                            Content="Cancel"
+                                            Command="{Binding CancelCommand}"/>
+                                </Grid>
+                                <Border Grid.Row="5"
+                                        Margin="0,18,0,0"
+                                        Padding="14"
+                                        CornerRadius="4"
+                                        Background="#FFF3EF"
+                                        BorderBrush="#E3A08C"
+                                        BorderThickness="1"
+                                        IsVisible="{Binding HasError}">
+                                    <TextBlock Text="{Binding ErrorMessage}"
+                                               Foreground="#8B2F22"
+                                               TextWrapping="Wrap"/>
+                                </Border>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsUninstallPage}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
+                                <TextBlock Classes="CaptionText" Text="UNINSTALL"/>
+                                <TextBlock Grid.Row="1"
+                                           Classes="PageTitle"
+                                           Margin="0,8,0,18"
+                                           Text="{Binding InstalledAppName, StringFormat='Uninstall {0}'}"/>
+                                <TextBlock Grid.Row="2"
+                                           Classes="BodyText"
+                                           Text="{Binding InstalledLocation, StringFormat='Install location: {0}'}"/>
+                                <TextBlock Grid.Row="3"
+                                           Classes="BodyText"
+                                           Margin="0,8,0,18"
+                                           Text="{Binding InstalledVersion, StringFormat='Current version: {0}'}"/>
+                                <CheckBox Grid.Row="4"
+                                          Content="Keep user configuration and logs"
+                                          IsChecked="{Binding PreserveUserData}"/>
+                                <Grid Grid.Row="5" Margin="0,22,0,0" ColumnDefinitions="Auto,Auto" ColumnSpacing="10">
+                                    <Button Content="Uninstall"
+                                            Classes="primary"
+                                            Command="{Binding StartUninstallCommand}"/>
+                                    <Button Grid.Column="1"
+                                            Content="Cancel"
+                                            Command="{Binding CancelCommand}"/>
+                                </Grid>
+                                <Border Grid.Row="6"
+                                        Margin="0,18,0,0"
+                                        Padding="14"
+                                        CornerRadius="4"
+                                        Background="#FFF3EF"
+                                        BorderBrush="#E3A08C"
+                                        BorderThickness="1"
+                                        IsVisible="{Binding HasError}">
+                                    <TextBlock Text="{Binding ErrorMessage}"
+                                               Foreground="#8B2F22"
+                                               TextWrapping="Wrap"/>
+                                </Border>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsUninstallProgressPage}" RowDefinitions="Auto,Auto,Auto,Auto,*">
+                                <TextBlock Classes="CaptionText" Text="UNINSTALLING"/>
+                                <TextBlock Grid.Row="1"
+                                           Classes="PageTitle"
+                                           Margin="0,8,0,18"
+                                           Text="{Binding InstalledAppName, StringFormat='Removing {0}'}"/>
+                                <TextBlock Grid.Row="2"
+                                           Classes="BodyText"
+                                           Margin="0,0,0,26"
+                                           Text="{Binding UninstallStatusText}"/>
+                                <ProgressBar Grid.Row="3"
+                                             Minimum="0"
+                                             Maximum="100"
+                                             Height="12"
+                                             Value="{Binding UninstallProgressPercent}"/>
+                                <TextBlock Grid.Row="4"
+                                           Margin="0,12,0,0"
+                                           Text="{Binding UninstallProgressPercent, StringFormat='{}{0}%'}"
+                                           Foreground="#152934"
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+
+                            <Grid IsVisible="{Binding IsUninstallCompletePage}" RowDefinitions="Auto,Auto,Auto,Auto,*">
+                                <TextBlock Classes="CaptionText" Text="FINISHED"/>
+                                <TextBlock Grid.Row="1"
+                                           Classes="PageTitle"
+                                           Margin="0,8,0,18"
+                                           Text="Uninstall complete"/>
+                                <TextBlock Grid.Row="2"
+                                           Classes="BodyText"
+                                           Text="The application has been removed. Any selected preserved data was left in place."/>
+                                <TextBlock Grid.Row="3"
+                                           Classes="BodyText"
+                                           Margin="0,12,0,0"
+                                           Text="{Binding UninstallLogPath, StringFormat='Log: {0}'}"/>
+                            </Grid>
+                        </Grid>
                     </Border>
-
-                    <TextBlock Grid.Row="4"
-                               Classes="BodyText"
-                               VerticalAlignment="Bottom"
-                               Text="Default folder: %LocalAppData%\MyAvaloniaApp"/>
                 </Grid>
-
-                <Grid IsVisible="{Binding IsProgressPage}" RowDefinitions="Auto,Auto,Auto,Auto,*">
-                    <TextBlock Classes="PageTitle" Text="Installing MyAvaloniaApp"/>
-                    <TextBlock Grid.Row="1"
-                               Classes="BodyText"
-                               Margin="0,18,0,26"
-                               Text="{Binding StatusText}"/>
-                    <ProgressBar Grid.Row="2"
-                                 Minimum="0"
-                                 Maximum="100"
-                                 Height="10"
-                                 Foreground="#1A73E8"
-                                 Background="#E8F0FE"
-                                 Value="{Binding ProgressPercent}"/>
-                    <TextBlock Grid.Row="3"
-                               Margin="0,12,0,0"
-                               Text="{Binding CurrentFile}"
-                               Foreground="#697386"
-                               TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Grid.Row="4"
-                               VerticalAlignment="Bottom"
-                               Text="{Binding ProgressPercent, StringFormat='{}{0}%'}"
-                               Foreground="#4C566A"/>
-                </Grid>
-
-                <Grid IsVisible="{Binding IsCompletePage}" RowDefinitions="Auto,Auto,Auto,*">
-                    <TextBlock Classes="PageTitle" Text="Installation complete"/>
-                    <TextBlock Grid.Row="1"
-                               Classes="BodyText"
-                               Margin="0,18,0,20"
-                               Text="MyAvaloniaApp has been installed successfully."/>
-                    <CheckBox Grid.Row="2"
-                              Content="Launch MyAvaloniaApp"
-                              IsChecked="{Binding LaunchAfterInstall}"/>
-                </Grid>
-            </Grid>
+            </Border>
         </Grid>
 
+        <!-- 底部命令栏固定放置导航按钮，便于后续扩展取消、日志等操作。 -->
         <Border Grid.Row="1"
-                Background="#FFFFFF"
-                BorderBrush="#E8EAED"
+                Background="#F7FAFB"
+                BorderBrush="#C7D3D9"
                 BorderThickness="0,1,0,0"
-                Padding="22,16">
+                Padding="24,16">
             <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                <TextBlock Classes="CaptionText"
+                           VerticalAlignment="Center"
+                           Text="BOOTSTRAPPER MODE · EXTERNAL PAYLOAD"/>
                 <Button Grid.Column="1"
                         Content="Back"
                         Margin="0,0,8,0"
                         Command="{Binding BackCommand}"
-                        IsVisible="{Binding IsNotCompletePage}"/>
+                        IsVisible="{Binding IsBackButtonVisible}"/>
                 <Button Grid.Column="2"
                         Content="Next"
                         Classes="primary"
@@ -323,6 +556,11 @@
                         Classes="primary"
                         Command="{Binding FinishCommand}"
                         IsVisible="{Binding IsCompletePage}"/>
+                <Button Grid.Column="3"
+                        Content="Close"
+                        Classes="primary"
+                        Command="{Binding CancelCommand}"
+                        IsVisible="{Binding IsUninstallCompletePage}"/>
             </Grid>
         </Border>
     </Grid>

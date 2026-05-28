@@ -7,6 +7,7 @@ namespace AvaInstaller.Services;
 
 public sealed class FolderPickerService : IFolderPickerService
 {
+    // Avalonia 的文件夹选择器需要从当前主窗口获取 StorageProvider。
     public async Task<string?> PickFolderAsync(string suggestedPath, CancellationToken cancellationToken)
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
