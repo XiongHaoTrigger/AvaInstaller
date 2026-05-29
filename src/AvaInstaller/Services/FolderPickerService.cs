@@ -5,11 +5,17 @@ using Avalonia.Platform.Storage;
 
 namespace AvaInstaller.Services;
 
+/// <summary>
+/// 文件夹选择器服务实现。
+/// 使用 Avalonia 的 StorageProvider 打开原生系统文件夹选择对话框，
+/// 需要从当前主窗口获取 StorageProvider 实例。
+/// </summary>
 public sealed class FolderPickerService : IFolderPickerService
 {
-    // Avalonia 的文件夹选择器需要从当前主窗口获取 StorageProvider。
+    /// <inheritdoc />
     public async Task<string?> PickFolderAsync(string suggestedPath, CancellationToken cancellationToken)
     {
+        // Avalonia 的文件夹选择器需要从当前主窗口获取 StorageProvider
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
             desktop.MainWindow is not Window window)
         {
@@ -22,6 +28,7 @@ public sealed class FolderPickerService : IFolderPickerService
             return null;
         }
 
+        // 尝试设置建议的初始目录
         IStorageFolder? suggestedFolder = null;
         if (!string.IsNullOrWhiteSpace(suggestedPath) && Directory.Exists(suggestedPath))
         {

@@ -1,14 +1,31 @@
 namespace AvaInstaller.Models;
 
-// 安装器页面枚举。ViewModel 根据该状态驱动 XAML 中各页面的 IsVisible。
+/// <summary>
+/// UI pages shown by the installer window.
+/// </summary>
 public enum InstallPage
 {
+    /// <summary>Welcome page.</summary>
     Welcome,
+
+    /// <summary>Install directory selection page.</summary>
     Directory,
-    Progress,
-    Complete,
+
+    /// <summary>Install progress page.</summary>
+    InstallProgress,
+
+    /// <summary>Install completion page.</summary>
+    InstallComplete,
+
+    /// <summary>Maintenance page for an already installed app.</summary>
     Installed,
-    Uninstall,
+
+    /// <summary>Uninstall confirmation page.</summary>
+    UninstallConfirm,
+
+    /// <summary>Uninstall progress page.</summary>
     UninstallProgress,
+
+    /// <summary>Uninstall completion page.</summary>
     UninstallComplete
 }
