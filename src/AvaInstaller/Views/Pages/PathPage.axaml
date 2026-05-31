@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AvaInstaller.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="652"
+             d:DesignHeight="456"
+             x:Class="AvaInstaller.Views.Pages.PathPage"
+             x:DataType="vm:PathPageViewModel">
+    <Design.DataContext>
+        <vm:PathPageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+        <TextBlock Classes="SectionKicker" Text="TARGET LOCATION" />
+        <TextBlock Grid.Row="1"
+                   Classes="PageTitle"
+                   Margin="0,8,0,12"
+                   Text="Select installation folder" />
+        <TextBlock Grid.Row="2"
+                   Classes="BodyText"
+                   Margin="0,0,0,20"
+                   Text="{Binding AppName, StringFormat='Setup will install {0} into the folder below. Existing files with matching names may be overwritten.'}" />
+
+        <StackPanel Grid.Row="3" Spacing="16">
+            <Border Classes="FormPanel">
+                <StackPanel Spacing="10">
+                    <TextBlock Classes="FieldLabel" Text="DESTINATION FOLDER" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <TextBox Text="{Binding InstallDirectory, Mode=TwoWay}" />
+                        <Button Grid.Column="1"
+                                Content="Browse..."
+                                Command="{Binding BrowseCommand}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border Classes="MetricTile">
+                    <StackPanel Spacing="6">
+                        <TextBlock Classes="MetricLabel" Text="DEPLOYMENT MODE" />
+                        <TextBlock Classes="MetricValue" Text="PAYLOAD" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Classes="MetricTile">
+                    <StackPanel Spacing="6">
+                        <TextBlock Classes="MetricLabel" Text="DEFAULT FOLDER" />
+                        <TextBlock Classes="MetricValue"
+                                   Text="{Binding DefaultFolder}"
+                                   FontSize="13"
+                                   TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+
+        <Border Grid.Row="4" Classes="CalloutPanel">
+            <TextBlock Classes="BodyText"
+                       FontSize="12"
+                       Text="The installer does not change registry keys, environment variables, services, COM registration, PATH, or file associations." />
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,62 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- 左侧步骤标签文本样式。 -->
+    <Style Selector="TextBlock.StepLabel">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBlock.StepLabel.active">
+        <Setter Property="Foreground" Value="#00264C" />
+    </Style>
+
+    <Style Selector="TextBlock.StepLabel.inactive">
+        <Setter Property="Foreground" Value="#64748B" />
+    </Style>
+
+    <!-- 左侧步骤行样式。 -->
+    <Style Selector="Border.StepItem">
+        <Setter Property="BorderThickness" Value="4,0,0,0" />
+        <Setter Property="Padding" Value="20,12" />
+    </Style>
+
+    <Style Selector="Border.StepItem.active">
+        <Setter Property="Background" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#00828C" />
+    </Style>
+
+    <Style Selector="Border.StepItem.inactive">
+        <Setter Property="Background" Value="#F1F5F9" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+
+    <!-- 左侧步骤圆点样式。 -->
+    <Style Selector="Border.StepDot">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="CornerRadius" Value="12" />
+    </Style>
+
+    <Style Selector="Border.StepDot.active">
+        <Setter Property="Background" Value="#00828C" />
+    </Style>
+
+    <Style Selector="Border.StepDot.inactive">
+        <Setter Property="Background" Value="#CBD5E1" />
+    </Style>
+
+    <Style Selector="TextBlock.StepNumber">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style Selector="TextBlock.StepNumber.active">
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+
+    <Style Selector="TextBlock.StepNumber.inactive">
+        <Setter Property="Foreground" Value="#475569" />
+    </Style>
+</Styles>

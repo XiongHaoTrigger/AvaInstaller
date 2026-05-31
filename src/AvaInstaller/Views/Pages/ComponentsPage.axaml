@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AvaInstaller.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="652"
+             d:DesignHeight="456"
+             x:Class="AvaInstaller.Views.Pages.ComponentsPage"
+             x:DataType="vm:ComponentsPageViewModel">
+    <Design.DataContext>
+        <vm:ComponentsPageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <TextBlock Classes="SectionKicker" Text="COMPONENTS" />
+        <TextBlock Grid.Row="1"
+                   Classes="PageTitle"
+                   Margin="0,8,0,12"
+                   Text="Choose components" />
+        <TextBlock Grid.Row="2"
+                   Classes="BodyText"
+                   Margin="0,0,0,18"
+                   Text="The current installer deploys the bundled payload as one required component. This page is ready for future module selection." />
+        <ItemsControl Grid.Row="3" ItemsSource="{Binding Components}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Classes="FormPanel" Margin="0,0,0,10">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                            <TextBlock Classes="BodyText" FontSize="12" Text="{Binding Description}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

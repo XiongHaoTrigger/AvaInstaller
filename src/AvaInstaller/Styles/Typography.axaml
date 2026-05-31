@@ -1,0 +1,46 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- 页面主标题样式：用于安装器各步骤页面的一级标题。 -->
+    <Style Selector="TextBlock.PageTitle">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="#0F172A" />
+        <Setter Property="LineHeight" Value="34" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- 正文样式：用于说明文字和提示文字。 -->
+    <Style Selector="TextBlock.BodyText">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="23" />
+        <Setter Property="Foreground" Value="#52636D" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- 页面小标题样式：用于步骤上方的英文状态标签。 -->
+    <Style Selector="TextBlock.SectionKicker">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="#00828C" />
+    </Style>
+
+    <!-- 表单字段标签样式。 -->
+    <Style Selector="TextBlock.FieldLabel">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="#64748B" />
+    </Style>
+
+    <!-- 指标卡片的小标签样式。 -->
+    <Style Selector="TextBlock.MetricLabel">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="#64748B" />
+    </Style>
+
+    <!-- 指标卡片的数值样式。 -->
+    <Style Selector="TextBlock.MetricValue">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="#003C71" />
+    </Style>
+</Styles>

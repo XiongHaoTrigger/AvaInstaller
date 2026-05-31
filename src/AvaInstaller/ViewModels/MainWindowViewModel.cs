@@ -1,9 +1,12 @@
 using System.Diagnostics;
+using System.ComponentModel;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AvaInstaller.Models;
 using AvaInstaller.Services;
+using AvaInstaller.StateMachines;
+using AvaInstaller.ViewModels.Pages;
 
 namespace AvaInstaller.ViewModels;
 
@@ -11,9 +14,8 @@ namespace AvaInstaller.ViewModels;
 /// 主窗口视图模型，负责承载界面数据并通过状态机驱动安装器流程。
 /// </summary>
 /// <remarks>
-/// 页面切换不在 ViewModel 中直接指定目标页，而是通过
-/// <see cref="InstallStateMachine"/> 接收 <see cref="InstallerEvent"/> 后统一完成。
-/// XAML binds <see cref="CurrentPage"/> for page visibility; the state machine tracks install flow only.
+/// 页面切换由 CurrentPage 暴露给 XAML；安装任务状态由 InstallerStateMachine 校验。
+/// 主 ViewModel 只负责组合服务、页面 VM 和命令，不在 View 中写业务逻辑。
 /// </remarks>
 public partial class MainWindowViewModel : ViewModelBase
 {
@@ -23,25 +25,45 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly InstallManifestService _manifestService;
     private readonly InstallStateService _stateService;
     private readonly UninstallService _uninstallService;
-    private readonly InstallStateMachine _stateMachine = new();
+    private readonly InstallerStateMachine _stateMachine = new();
 
     private string? _uninstallManifestPath;
 
+    public WelcomePageViewModel WelcomePage { get; }
+
+    public PathPageViewModel PathPage { get; }
+
+    public InstallingPageViewModel InstallingPage { get; }
+
+    public CompletedPageViewModel CompletedPage { get; }
+
+    public InstalledPageViewModel InstalledPage { get; }
+
+    public UninstallConfirmPageViewModel UninstallConfirmPage { get; }
+
+    public UninstallProgressPageViewModel UninstallProgressPage { get; }
+
+    public UninstallCompletePageViewModel UninstallCompletePage { get; }
+
+    [ObservableProperty]
+    private ViewModelBase _activePage = null!;
+
     /// <summary>
-    /// 获取当前状态机状态。
+    /// 获取当前界面步骤。
+    /// XAML 根据该值切换页面、步骤高亮和底部命令。
     /// </summary>
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(BackCommand))]
     [NotifyCanExecuteChangedFor(nameof(NextCommand))]
     [NotifyCanExecuteChangedFor(nameof(InstallCommand))]
     [NotifyCanExecuteChangedFor(nameof(BrowseCommand))]
-    private InstallPage _currentPage = InstallPage.Welcome;
+    private InstallerStep _currentPage = InstallerStep.Welcome;
 
     /// <summary>
-    /// Gets the current install flow state.
+    /// 获取当前安装流程状态。
     /// </summary>
     [ObservableProperty]
-    private InstallFlowState _installFlowState = InstallFlowState.Idle;
+    private InstallerState _installerState = InstallerState.Idle;
 
     /// <summary>
     /// 获取或设置安装目录。
@@ -166,6 +188,49 @@ public partial class MainWindowViewModel : ViewModelBase
         _manifestService = manifestService;
         _stateService = stateService;
         _uninstallService = uninstallService;
+
+        WelcomePage = new WelcomePageViewModel();
+        PathPage = new PathPageViewModel(BrowseSelectedFolderAsync)
+        {
+            InstallDirectory = InstallDirectory
+        };
+        InstallingPage = new InstallingPageViewModel
+        {
+            ProgressPercent = ProgressPercent,
+            CurrentFile = CurrentFile,
+            StatusText = StatusText
+        };
+        CompletedPage = new CompletedPageViewModel
+        {
+            LaunchAfterInstall = LaunchAfterInstall
+        };
+        InstalledPage = new InstalledPageViewModel
+        {
+            InstalledAppName = InstalledAppName,
+            InstalledVersion = InstalledVersion,
+            InstalledLocation = InstalledLocation
+        };
+        UninstallConfirmPage = new UninstallConfirmPageViewModel
+        {
+            InstalledAppName = InstalledAppName,
+            InstalledVersion = InstalledVersion,
+            InstalledLocation = InstalledLocation,
+            PreserveUserData = PreserveUserData
+        };
+        UninstallProgressPage = new UninstallProgressPageViewModel
+        {
+            UninstallProgressPercent = UninstallProgressPercent,
+            UninstallStatusText = UninstallStatusText
+        };
+        UninstallCompletePage = new UninstallCompletePageViewModel
+        {
+            UninstallLogPath = UninstallLogPath
+        };
+
+        PathPage.PropertyChanged += OnPagePropertyChanged;
+        CompletedPage.PropertyChanged += OnPagePropertyChanged;
+        UninstallConfirmPage.PropertyChanged += OnPagePropertyChanged;
+        ActivePage = ResolveActivePage(CurrentPage);
     }
 
     /// <summary>
@@ -175,6 +240,86 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnErrorMessageChanged(string? value)
     {
         OnPropertyChanged(nameof(HasError));
+        PathPage.ErrorMessage = value;
+        InstalledPage.ErrorMessage = value;
+        UninstallConfirmPage.ErrorMessage = value;
+    }
+
+    partial void OnCurrentPageChanged(InstallerStep value)
+    {
+        ActivePage = ResolveActivePage(value);
+    }
+
+    partial void OnInstallDirectoryChanged(string value)
+    {
+        if (PathPage.InstallDirectory != value)
+        {
+            PathPage.InstallDirectory = value;
+        }
+    }
+
+    partial void OnProgressPercentChanged(int value)
+    {
+        InstallingPage.ProgressPercent = value;
+    }
+
+    partial void OnCurrentFileChanged(string value)
+    {
+        InstallingPage.CurrentFile = value;
+    }
+
+    partial void OnStatusTextChanged(string value)
+    {
+        InstallingPage.StatusText = value;
+    }
+
+    partial void OnLaunchAfterInstallChanged(bool value)
+    {
+        if (CompletedPage.LaunchAfterInstall != value)
+        {
+            CompletedPage.LaunchAfterInstall = value;
+        }
+    }
+
+    partial void OnInstalledAppNameChanged(string value)
+    {
+        InstalledPage.InstalledAppName = value;
+        UninstallConfirmPage.InstalledAppName = value;
+    }
+
+    partial void OnInstalledVersionChanged(string value)
+    {
+        InstalledPage.InstalledVersion = value;
+        UninstallConfirmPage.InstalledVersion = value;
+    }
+
+    partial void OnInstalledLocationChanged(string value)
+    {
+        InstalledPage.InstalledLocation = value;
+        UninstallConfirmPage.InstalledLocation = value;
+    }
+
+    partial void OnPreserveUserDataChanged(bool value)
+    {
+        if (UninstallConfirmPage.PreserveUserData != value)
+        {
+            UninstallConfirmPage.PreserveUserData = value;
+        }
+    }
+
+    partial void OnUninstallProgressPercentChanged(int value)
+    {
+        UninstallProgressPage.UninstallProgressPercent = value;
+    }
+
+    partial void OnUninstallStatusTextChanged(string value)
+    {
+        UninstallProgressPage.UninstallStatusText = value;
+    }
+
+    partial void OnUninstallLogPathChanged(string? value)
+    {
+        UninstallCompletePage.UninstallLogPath = value;
     }
 
     /// <summary>
@@ -195,7 +340,7 @@ public partial class MainWindowViewModel : ViewModelBase
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 ErrorMessage = $"Failed to initialize installer state. {ex.Message}";
-                CurrentPage = InstallPage.Welcome;
+                CurrentPage = InstallerStep.Welcome;
             });
         }
     }
@@ -205,6 +350,11 @@ public partial class MainWindowViewModel : ViewModelBase
     /// </summary>
     [RelayCommand(CanExecute = nameof(CanBrowse))]
     private async Task BrowseAsync()
+    {
+        await BrowseSelectedFolderAsync();
+    }
+
+    private async Task BrowseSelectedFolderAsync()
     {
         var selectedFolder = await _folderPickerService.PickFolderAsync(InstallDirectory, CancellationToken.None);
         if (!string.IsNullOrWhiteSpace(selectedFolder))
@@ -221,7 +371,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private void Back()
     {
         ErrorMessage = null;
-        CurrentPage = InstallPage.Welcome;
+        CurrentPage = InstallerStep.Welcome;
     }
 
     /// <summary>
@@ -231,7 +381,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private void Next()
     {
         ErrorMessage = null;
-        CurrentPage = InstallPage.Directory;
+        CurrentPage = InstallerStep.Path;
     }
 
     /// <summary>
@@ -242,7 +392,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         ErrorMessage = null;
         MoveInstallFlow(InstallerEvent.BeginInstall);
-        CurrentPage = InstallPage.InstallProgress;
+        CurrentPage = InstallerStep.Installing;
         ProgressPercent = 0;
         CurrentFile = string.Empty;
         StatusText = "Preparing installation...";
@@ -260,7 +410,7 @@ public partial class MainWindowViewModel : ViewModelBase
             CurrentFile = string.Empty;
             ProgressPercent = 100;
             MoveInstallFlow(InstallerEvent.CompleteInstall);
-            CurrentPage = InstallPage.InstallComplete;
+            CurrentPage = InstallerStep.Completed;
         }
         catch (OperationCanceledException)
         {
@@ -283,7 +433,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private void ShowUninstall()
     {
         ErrorMessage = null;
-        CurrentPage = InstallPage.UninstallConfirm;
+        CurrentPage = InstallerStep.UninstallConfirm;
     }
 
     /// <summary>
@@ -317,7 +467,7 @@ public partial class MainWindowViewModel : ViewModelBase
             return;
         }
 
-        CurrentPage = InstallPage.UninstallProgress;
+        CurrentPage = InstallerStep.UninstallProgress;
         UninstallProgressPercent = 0;
         UninstallStatusText = "Preparing uninstall...";
 
@@ -344,7 +494,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             UninstallProgressPercent = 100;
             UninstallStatusText = "Uninstall completed.";
-            CurrentPage = InstallPage.UninstallComplete;
+            CurrentPage = InstallerStep.UninstallComplete;
         }
         else
         {
@@ -367,12 +517,18 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void Finish()
     {
-        if (CurrentPage == InstallPage.InstallComplete && LaunchAfterInstall)
+        if (CurrentPage == InstallerStep.Completed && LaunchAfterInstall)
         {
             TryLaunchInstalledApp();
         }
 
         Shutdown();
+    }
+
+    [RelayCommand]
+    private void ClearError()
+    {
+        ErrorMessage = null;
     }
 
     private StartupState ResolveStartupState()
@@ -454,13 +610,13 @@ public partial class MainWindowViewModel : ViewModelBase
         switch (startupState.Mode)
         {
             case StartupMode.Install:
-                CurrentPage = InstallPage.Welcome;
+                CurrentPage = InstallerStep.Welcome;
                 break;
             case StartupMode.Installed:
                 if (startupState.State is not null)
                 {
                     LoadInstalledState(startupState.State);
-                    CurrentPage = InstallPage.Installed;
+                    CurrentPage = InstallerStep.Installed;
                 }
                 break;
             case StartupMode.Uninstall:
@@ -474,11 +630,11 @@ public partial class MainWindowViewModel : ViewModelBase
                     _uninstallManifestPath = startupState.ManifestPath;
                 }
 
-                CurrentPage = InstallPage.UninstallConfirm;
+                CurrentPage = InstallerStep.UninstallConfirm;
                 break;
             case StartupMode.UninstallError:
                 ErrorMessage = startupState.ErrorMessage;
-                CurrentPage = InstallPage.UninstallConfirm;
+                CurrentPage = InstallerStep.UninstallConfirm;
                 break;
         }
     }
@@ -512,22 +668,22 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private bool CanBrowse()
     {
-        return CurrentPage is InstallPage.Welcome or InstallPage.Directory;
+        return CurrentPage is InstallerStep.Welcome or InstallerStep.Path;
     }
 
     private bool CanGoBack()
     {
-        return CurrentPage == InstallPage.Directory;
+        return CurrentPage == InstallerStep.Path;
     }
 
     private bool CanGoNext()
     {
-        return CurrentPage == InstallPage.Welcome;
+        return CurrentPage == InstallerStep.Welcome;
     }
 
     private bool CanInstall()
     {
-        return CurrentPage == InstallPage.Directory &&
+        return CurrentPage == InstallerStep.Path &&
                !string.IsNullOrWhiteSpace(InstallDirectory);
     }
 
@@ -536,19 +692,19 @@ public partial class MainWindowViewModel : ViewModelBase
         ErrorMessage = message;
         StatusText = "Installation failed.";
         MoveInstallFlowIfPossible(InstallerEvent.FailInstall);
-        CurrentPage = InstallPage.Directory;
+        CurrentPage = InstallerStep.Path;
     }
 
     private void FailUninstall(string message)
     {
         ErrorMessage = message;
         UninstallStatusText = "Uninstall failed.";
-        CurrentPage = InstallPage.UninstallConfirm;
+        CurrentPage = InstallerStep.UninstallConfirm;
     }
 
     private void MoveInstallFlow(InstallerEvent installerEvent)
     {
-        InstallFlowState = _stateMachine.Fire(installerEvent);
+        InstallerState = _stateMachine.Fire(installerEvent);
     }
 
     private void MoveInstallFlowIfPossible(InstallerEvent installerEvent)
@@ -580,6 +736,42 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
             ErrorMessage = $"Unable to start {InstallerMetadata.MainExe}. {ex.Message}";
+        }
+    }
+
+    private ViewModelBase ResolveActivePage(InstallerStep page)
+    {
+        return page switch
+        {
+            InstallerStep.Welcome => WelcomePage,
+            InstallerStep.Path => PathPage,
+            InstallerStep.Installing => InstallingPage,
+            InstallerStep.Completed => CompletedPage,
+            InstallerStep.Installed => InstalledPage,
+            InstallerStep.UninstallConfirm => UninstallConfirmPage,
+            InstallerStep.UninstallProgress => UninstallProgressPage,
+            InstallerStep.UninstallComplete => UninstallCompletePage,
+            _ => WelcomePage
+        };
+    }
+
+    private void OnPagePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender == PathPage && e.PropertyName == nameof(PathPageViewModel.InstallDirectory))
+        {
+            InstallDirectory = PathPage.InstallDirectory;
+            return;
+        }
+
+        if (sender == CompletedPage && e.PropertyName == nameof(CompletedPageViewModel.LaunchAfterInstall))
+        {
+            LaunchAfterInstall = CompletedPage.LaunchAfterInstall;
+            return;
+        }
+
+        if (sender == UninstallConfirmPage && e.PropertyName == nameof(UninstallConfirmPageViewModel.PreserveUserData))
+        {
+            PreserveUserData = UninstallConfirmPage.PreserveUserData;
         }
     }
 

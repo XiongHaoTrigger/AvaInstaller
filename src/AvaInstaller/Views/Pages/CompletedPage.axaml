@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AvaInstaller.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="652"
+             d:DesignHeight="456"
+             x:Class="AvaInstaller.Views.Pages.CompletedPage"
+             x:DataType="vm:CompletedPageViewModel">
+    <Design.DataContext>
+        <vm:CompletedPageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+        <TextBlock Classes="SectionKicker" Text="FINISHED" />
+        <TextBlock Grid.Row="1"
+                   Classes="PageTitle"
+                   Margin="0,8,0,12"
+                   Text="Installation complete" />
+        <TextBlock Grid.Row="2"
+                   Classes="BodyText"
+                   Margin="0,0,0,20"
+                   Text="{Binding AppName, StringFormat='{}{0} has been installed successfully.'}" />
+        <Border Grid.Row="3" Classes="FormPanel">
+            <CheckBox Content="{Binding AppName, StringFormat='Launch {0}'}"
+                      IsChecked="{Binding LaunchAfterInstall}" />
+        </Border>
+        <Border Grid.Row="4"
+                Width="148"
+                Height="148"
+                CornerRadius="74"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="#E6FFFA"
+                BorderBrush="#00828C"
+                BorderThickness="2">
+            <TextBlock Text="OK"
+                       Foreground="#006971"
+                       FontSize="36"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Border>
+    </Grid>
+</UserControl>

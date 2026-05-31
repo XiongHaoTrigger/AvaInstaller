@@ -1,0 +1,59 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- 全局按钮基线样式，保证主窗口和页面内按钮尺寸一致。 -->
+    <Style Selector="Button">
+        <Setter Property="MinWidth" Value="86" />
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="Padding" Value="16,7" />
+        <Setter Property="Background" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#CBD5E1" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="#334155" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style Selector="Button:pointerover">
+        <Setter Property="Background" Value="#F8FAFC" />
+        <Setter Property="BorderBrush" Value="#94A3B8" />
+    </Style>
+
+    <!-- 主操作按钮，例如 Next、Install、Finish。 -->
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="#00828C" />
+        <Setter Property="BorderBrush" Value="#00828C" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+
+    <Style Selector="Button.primary:pointerover">
+        <Setter Property="Background" Value="#006971" />
+        <Setter Property="BorderBrush" Value="#006971" />
+    </Style>
+
+    <!-- 危险操作按钮，例如卸载。 -->
+    <Style Selector="Button.danger">
+        <Setter Property="Background" Value="#B42318" />
+        <Setter Property="BorderBrush" Value="#B42318" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+
+    <Style Selector="Button:disabled">
+        <Setter Property="Background" Value="#EEF2F6" />
+        <Setter Property="BorderBrush" Value="#D8E1E7" />
+        <Setter Property="Foreground" Value="#94A3B8" />
+    </Style>
+
+    <!-- 底部提示条关闭按钮。 -->
+    <Style Selector="Button.tipClose">
+        <Setter Property="MinWidth" Value="28" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#E3A08C" />
+        <Setter Property="Foreground" Value="#8B2F22" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+</Styles>

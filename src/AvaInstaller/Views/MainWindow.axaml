@@ -1,596 +1,310 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:AvaInstaller.ViewModels"
+        xmlns:conv="using:AvaInstaller.Converters"
+        xmlns:pageVm="using:AvaInstaller.ViewModels.Pages"
+        xmlns:pages="using:AvaInstaller.Views.Pages"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        d:DesignWidth="860"
-        d:DesignHeight="560"
-        Width="860"
-        Height="560"
-        MinWidth="760"
-        MinHeight="480"
+        d:DesignWidth="960"
+        d:DesignHeight="640"
+        Width="960"
+        Height="640"
+        MinWidth="960"
+        MinHeight="640"
         CanResize="False"
         WindowStartupLocation="CenterScreen"
         x:Class="AvaInstaller.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="MyAvaloniaApp Installer"
-        Background="#E8EDF2"
-        FontFamily="Segoe UI">
+        Icon="/Assets/app.ico"
+        Title="Ava Industrial Suite Setup"
+        Background="#CBD5E1"
+        FontFamily="Inter, Segoe UI">
 
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
     <Window.Resources>
-        <vm:StateVisibilityConverter x:Key="StateVisibilityConverter" />
+        <conv:StateVisibilityConverter x:Key="StateVisibilityConverter" />
     </Window.Resources>
 
-    <!--
-        主窗口采用医疗软件/工业设备常见的信息架构：
-        左侧为设备品牌区和流程状态，右侧为当前操作页，底部为固定操作栏。
-        只调整视觉样式，不改变 ViewModel 中的页面状态和命令绑定。
-    -->
-    <Window.Styles>
-        <Style Selector="TextBlock.PageTitle">
-            <Setter Property="FontSize" Value="27" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#152934" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-        </Style>
-        <Style Selector="TextBlock.BodyText">
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="LineHeight" Value="23" />
-            <Setter Property="Foreground" Value="#52636D" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-        </Style>
-        <Style Selector="TextBlock.CaptionText">
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="#6D7E88" />
-        </Style>
-        <Style Selector="TextBlock.SideTitle">
-            <Setter Property="Foreground" Value="#EEF7F9" />
-            <Setter Property="FontSize" Value="22" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-        </Style>
-        <Style Selector="TextBlock.SideSubTitle">
-            <Setter Property="Foreground" Value="#93AAB5" />
-            <Setter Property="FontSize" Value="12" />
-        </Style>
-        <Style Selector="TextBlock.StepLabel">
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-        <Style Selector="TextBlock.StepLabel.active">
-            <Setter Property="Foreground" Value="#F4FBFC" />
-        </Style>
-        <Style Selector="TextBlock.StepLabel.inactive">
-            <Setter Property="Foreground" Value="#8FA4AE" />
-        </Style>
-        <Style Selector="Border.StepDot">
-            <Setter Property="Width" Value="30" />
-            <Setter Property="Height" Value="30" />
-            <Setter Property="CornerRadius" Value="15" />
-            <Setter Property="BorderThickness" Value="1" />
-        </Style>
-        <Style Selector="Border.StepDot.active">
-            <Setter Property="Background" Value="#00A6B2" />
-            <Setter Property="BorderBrush" Value="#76E2E8" />
-        </Style>
-        <Style Selector="Border.StepDot.inactive">
-            <Setter Property="Background" Value="#233741" />
-            <Setter Property="BorderBrush" Value="#3C515C" />
-        </Style>
-        <Style Selector="TextBlock.StepNumber">
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-        </Style>
-        <Style Selector="TextBlock.StepNumber.active">
-            <Setter Property="Foreground" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="TextBlock.StepNumber.inactive">
-            <Setter Property="Foreground" Value="#9EB0B9" />
-        </Style>
-        <Style Selector="Button">
-            <Setter Property="MinWidth" Value="96" />
-            <Setter Property="MinHeight" Value="40" />
-            <Setter Property="Padding" Value="18,7" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Background" Value="#F8FAFB" />
-            <Setter Property="BorderBrush" Value="#95A9B3" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="#1D3C49" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-        </Style>
-        <!-- Siemens 工业体系强调交互元素有明确状态；secondary hover 使用浅绿/蓝系反馈。 -->
-        <Style Selector="Button:pointerover">
-            <Setter Property="Background" Value="#CFF7E8" />
-            <Setter Property="BorderBrush" Value="#00CCCC" />
-            <Setter Property="Foreground" Value="#003750" />
-        </Style>
-        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#CFF7E8" />
-            <Setter Property="BorderBrush" Value="#00CCCC" />
-            <Setter Property="TextBlock.Foreground" Value="#003750" />
-        </Style>
-        <Style Selector="Button:pressed">
-            <Setter Property="Background" Value="#9FE9D0" />
-            <Setter Property="BorderBrush" Value="#009999" />
-            <Setter Property="Foreground" Value="#002B3A" />
-        </Style>
-        <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#9FE9D0" />
-            <Setter Property="BorderBrush" Value="#009999" />
-            <Setter Property="TextBlock.Foreground" Value="#002B3A" />
-        </Style>
-        <Style Selector="Button.primary">
-            <Setter Property="Background" Value="#008A96" />
-            <Setter Property="BorderBrush" Value="#008A96" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="Button.primary /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#008A96" />
-            <Setter Property="BorderBrush" Value="#008A96" />
-            <Setter Property="TextBlock.Foreground" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="Button.primary:pointerover">
-            <Setter Property="Background" Value="#00A6B2" />
-            <Setter Property="BorderBrush" Value="#41F27D" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#00A6B2" />
-            <Setter Property="BorderBrush" Value="#41F27D" />
-            <Setter Property="TextBlock.Foreground" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="Button.primary:pressed">
-            <Setter Property="Background" Value="#006B76" />
-            <Setter Property="BorderBrush" Value="#00A6B2" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#006B76" />
-            <Setter Property="BorderBrush" Value="#00A6B2" />
-            <Setter Property="TextBlock.Foreground" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="Button:disabled">
-            <Setter Property="Background" Value="#EEF2F4" />
-            <Setter Property="BorderBrush" Value="#D2DCE1" />
-            <Setter Property="Foreground" Value="#9AA8AF" />
-        </Style>
-        <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#EEF2F4" />
-            <Setter Property="BorderBrush" Value="#D2DCE1" />
-            <Setter Property="TextBlock.Foreground" Value="#9AA8AF" />
-        </Style>
-        <Style Selector="TextBox">
-            <Setter Property="MinHeight" Value="42" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Background" Value="#F9FBFC" />
-            <Setter Property="BorderBrush" Value="#AEBFC7" />
-            <Setter Property="Foreground" Value="#152934" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Padding" Value="12,6" />
-        </Style>
-        <Style Selector="ProgressBar">
-            <Setter Property="Foreground" Value="#00A6B2" />
-            <Setter Property="Background" Value="#D5E1E6" />
-        </Style>
-    </Window.Styles>
+    <Window.DataTemplates>
+        <DataTemplate DataType="pageVm:WelcomePageViewModel">
+            <pages:WelcomePage />
+        </DataTemplate>
+        <DataTemplate DataType="pageVm:PathPageViewModel">
+            <pages:PathPage />
+        </DataTemplate>
+        <DataTemplate DataType="pageVm:InstallingPageViewModel">
+            <pages:InstallingPage />
+        </DataTemplate>
+        <DataTemplate DataType="pageVm:CompletedPageViewModel">
+            <pages:CompletedPage />
+        </DataTemplate>
+        <DataTemplate DataType="pageVm:InstalledPageViewModel">
+            <pages:InstalledPage />
+        </DataTemplate>
+        <DataTemplate DataType="pageVm:UninstallConfirmPageViewModel">
+            <pages:UninstallConfirmPage />
+        </DataTemplate>
+        <DataTemplate DataType="pageVm:UninstallProgressPageViewModel">
+            <pages:UninstallProgressPage />
+        </DataTemplate>
+        <DataTemplate DataType="pageVm:UninstallCompletePageViewModel">
+            <pages:UninstallCompletePage />
+        </DataTemplate>
+    </Window.DataTemplates>
 
-    <Grid RowDefinitions="*,Auto">
-        <Grid ColumnDefinitions="270,*">
-            <!-- 左侧工业设备风格侧栏：用深色面板承载品牌、状态和流程导航。 -->
-            <Border Background="#172A34"
-                    BorderBrush="#0F1C23"
-                    BorderThickness="0,0,1,0">
-                <Grid RowDefinitions="Auto,Auto,*" Margin="28,30">
-                    <StackPanel Spacing="14">
-                        <Grid ColumnDefinitions="48,*" ColumnSpacing="12">
-                            <Border Width="46"
-                                    Height="46"
-                                    CornerRadius="4"
-                                    Background="#00A6B2"
-                                    BorderBrush="#7FE3E9"
-                                    BorderThickness="1">
-                                <TextBlock Text="A"
-                                           Foreground="White"
-                                           FontSize="24"
-                                           FontWeight="SemiBold"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
-                            </Border>
-                            <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
-                                <TextBlock Classes="SideTitle" Text="MyAvaloniaApp" />
-                                <TextBlock Classes="SideSubTitle" Text="Medical Workstation Installer" />
-                            </StackPanel>
-                        </Grid>
 
-                        <Border Height="1" Background="#2E4651" Margin="0,8,0,0" />
+    <Border Margin="0"
+            Background="#FFFFFF"
+            BorderBrush="#CBD5E1"
+            BorderThickness="1">
+        <Grid RowDefinitions="80,*,Auto,64">
+            <Border Background="#00264C"
+                    BorderBrush="#155E75"
+                    BorderThickness="0,0,0,1">
+                <Grid ColumnDefinitions="*,Auto" Margin="28,0">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="12"
+                                VerticalAlignment="Center">
+                        <Border Width="34"
+                                Height="34"
+                                CornerRadius="4"
+                                Background="#00828C"
+                                BorderBrush="#42D7DE"
+                                BorderThickness="1">
+                            <TextBlock Text="A"
+                                       Foreground="#FFFFFF"
+                                       FontSize="19"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="Ava Industrial Suite"
+                                       Foreground="#FFFFFF"
+                                       FontSize="20"
+                                       FontWeight="Bold" />
+                            <TextBlock Text="Setup deployment console"
+                                       Foreground="#B6C8D3"
+                                       FontSize="11" />
+                        </StackPanel>
                     </StackPanel>
-
-                    <!-- 状态区模拟医疗设备软件常见的 readiness/status 模块。 -->
-                    <Border Grid.Row="1"
-                            Margin="0,24,0,0"
-                            Padding="14"
-                            CornerRadius="4"
-                            Background="#203641"
-                            BorderBrush="#35505C"
-                            BorderThickness="1">
-                        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                            <Border Width="10"
-                                    Height="10"
-                                    CornerRadius="5"
-                                    Background="#00C2A8"
-                                    VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="1"
-                                       Text="SYSTEM READY"
-                                       Foreground="#DDECEF"
-                                       FontSize="12"
-                                       FontWeight="SemiBold" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.ColumnSpan="2"
-                                       Margin="0,8,0,0"
-                                       Text="External payload deployment"
-                                       Foreground="#91A6B0"
-                                       FontSize="12" />
-                        </Grid>
+                    <Border Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Background="#001D3A"
+                            CornerRadius="3"
+                            Padding="9,5">
+                        <TextBlock Text="v1.0.0"
+                                   Foreground="#CBD5E1"
+                                   FontSize="11"
+                                   FontFamily="Consolas" />
                     </Border>
-
-                    <!-- 每一步都保留 active/inactive 两组节点，用现有布尔属性控制显示。 -->
-                    <StackPanel Grid.Row="2"
-                                VerticalAlignment="Bottom"
-                                Spacing="15">
-                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12"
-                              IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Welcome}">
-                            <Border Classes="StepDot active">
-                                <TextBlock Classes="StepNumber active" Text="1" />
-                            </Border>
-                            <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Welcome" />
-                        </Grid>
-                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12"
-                              IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=!Welcome}">
-                            <Border Classes="StepDot inactive">
-                                <TextBlock Classes="StepNumber inactive" Text="1" />
-                            </Border>
-                            <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Welcome" />
-                        </Grid>
-
-                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12"
-                              IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Directory}">
-                            <Border Classes="StepDot active">
-                                <TextBlock Classes="StepNumber active" Text="2" />
-                            </Border>
-                            <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Install folder" />
-                        </Grid>
-                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12"
-                              IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=!Directory}">
-                            <Border Classes="StepDot inactive">
-                                <TextBlock Classes="StepNumber inactive" Text="2" />
-                            </Border>
-                            <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Install folder" />
-                        </Grid>
-
-                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12"
-                              IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=InstallProgress}">
-                            <Border Classes="StepDot active">
-                                <TextBlock Classes="StepNumber active" Text="3" />
-                            </Border>
-                            <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Install" />
-                        </Grid>
-                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12"
-                              IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=!InstallProgress}">
-                            <Border Classes="StepDot inactive">
-                                <TextBlock Classes="StepNumber inactive" Text="3" />
-                            </Border>
-                            <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Install" />
-                        </Grid>
-
-                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12"
-                              IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=InstallComplete}">
-                            <Border Classes="StepDot active">
-                                <TextBlock Classes="StepNumber active" Text="4" />
-                            </Border>
-                            <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Complete" />
-                        </Grid>
-                        <Grid ColumnDefinitions="30,*" ColumnSpacing="12"
-                              IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=!InstallComplete}">
-                            <Border Classes="StepDot inactive">
-                                <TextBlock Classes="StepNumber inactive" Text="4" />
-                            </Border>
-                            <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Complete" />
-                        </Grid>
-                    </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- 右侧为当前页面内容区；各页面通过 IsVisible 和 ViewModel 状态切换。 -->
-            <Border Grid.Column="1"
-                    Margin="0"
-                    Background="#EEF3F6">
-                <Grid Margin="46,42,46,34">
-                    <Border Background="#F9FBFC"
-                            BorderBrush="#CAD6DC"
-                            BorderThickness="1"
-                            CornerRadius="4"
-                            Padding="30">
-                        <Grid>
-                            <Grid
-                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Welcome}"
-                                RowDefinitions="Auto,Auto,*,Auto">
-                                <TextBlock Classes="CaptionText" Text="INSTALLATION WIZARD" />
-                                <TextBlock Grid.Row="1"
-                                           Classes="PageTitle"
-                                           Margin="0,8,0,18"
-                                           Text="Welcome to MyAvaloniaApp Installer" />
-                                <TextBlock Grid.Row="2"
-                                           Classes="BodyText"
-                                           Text="This wizard will install MyAvaloniaApp on your computer. The installer only extracts files to the folder you choose and does not change registry keys, environment variables, services, COM registration, PATH, or file associations." />
-                                <TextBlock Grid.Row="3"
-                                           Classes="BodyText"
-                                           Text="Click Next to choose an installation folder." />
-                            </Grid>
+            <Grid Grid.Row="1" ColumnDefinitions="240,*">
+                <Border Background="#F1F5F9"
+                        BorderBrush="#D8E1E7"
+                        BorderThickness="0,0,1,0">
+                    <Grid RowDefinitions="Auto,*" Margin="0,28,0,0">
+                        <StackPanel Margin="24,0,24,26" Spacing="4">
+                            <TextBlock Text="Setup Wizard"
+                                       Foreground="#00264C"
+                                       FontSize="16"
+                                       FontWeight="Bold" />
+                            <TextBlock Text="Installation progress"
+                                       Foreground="#64748B"
+                                       FontSize="11" />
+                        </StackPanel>
 
-                            <Grid
-                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Directory}"
-                                RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
-                                <TextBlock Classes="CaptionText" Text="TARGET LOCATION" />
-                                <TextBlock Grid.Row="1"
-                                           Classes="PageTitle"
-                                           Margin="0,8,0,18"
-                                           Text="Choose installation folder" />
-                                <TextBlock Grid.Row="2"
-                                           Classes="BodyText"
-                                           Margin="0,0,0,18"
-                                           Text="Select where MyAvaloniaApp files should be extracted. Existing files with the same names will be overwritten." />
-
-                                <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                    <TextBox Text="{Binding InstallDirectory, Mode=TwoWay}" />
-                                    <Button Grid.Column="1"
-                                            Content="Browse..."
-                                            Command="{Binding BrowseCommand}" />
+                        <StackPanel Grid.Row="1">
+                            <Border Classes="StepItem active"
+                                    IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Welcome}">
+                                <Grid ColumnDefinitions="24,*" ColumnSpacing="12">
+                                    <Border Classes="StepDot active">
+                                        <TextBlock Classes="StepNumber active" Text="1" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Welcome" />
                                 </Grid>
-
-                                <Border Grid.Row="4"
-                                        Margin="0,18,0,0"
-                                        Padding="14"
-                                        CornerRadius="4"
-                                        Background="#FFF3EF"
-                                        BorderBrush="#E3A08C"
-                                        BorderThickness="1"
-                                        IsVisible="{Binding HasError}">
-                                    <TextBlock Text="{Binding ErrorMessage}"
-                                               Foreground="#8B2F22"
-                                               TextWrapping="Wrap" />
-                                </Border>
-
-                                <TextBlock Grid.Row="5"
-                                           Classes="BodyText"
-                                           Text="Default folder: %LocalAppData%\MyAvaloniaApp" />
-                            </Grid>
-
-                            <Grid
-                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=InstallProgress}"
-                                RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
-                                <TextBlock Classes="CaptionText" Text="DEPLOYMENT" />
-                                <TextBlock Grid.Row="1"
-                                           Classes="PageTitle"
-                                           Margin="0,8,0,18"
-                                           Text="Installing MyAvaloniaApp" />
-                                <TextBlock Grid.Row="2"
-                                           Classes="BodyText"
-                                           Margin="0,0,0,26"
-                                           Text="{Binding StatusText}" />
-                                <ProgressBar Grid.Row="3"
-                                             Minimum="0"
-                                             Maximum="100"
-                                             Height="12"
-                                             Value="{Binding ProgressPercent}" />
-                                <TextBlock Grid.Row="4"
-                                           Margin="0,12,0,0"
-                                           Text="{Binding CurrentFile}"
-                                           Foreground="#5B6D76"
-                                           TextTrimming="CharacterEllipsis" />
-                                <TextBlock Grid.Row="5"
-                                           Text="{Binding ProgressPercent, StringFormat='{}{0}%'}"
-                                           Foreground="#152934"
-                                           FontWeight="SemiBold" />
-                            </Grid>
-
-                            <Grid
-                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=InstallComplete}"
-                                RowDefinitions="Auto,Auto,Auto,Auto,*">
-                                <TextBlock Classes="CaptionText" Text="FINISHED" />
-                                <TextBlock Grid.Row="1"
-                                           Classes="PageTitle"
-                                           Margin="0,8,0,18"
-                                           Text="Installation complete" />
-                                <TextBlock Grid.Row="2"
-                                           Classes="BodyText"
-                                           Margin="0,0,0,20"
-                                           Text="MyAvaloniaApp has been installed successfully." />
-                                <CheckBox Grid.Row="3"
-                                          Content="Launch MyAvaloniaApp"
-                                          IsChecked="{Binding LaunchAfterInstall}" />
-                            </Grid>
-
-                            <Grid
-                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Installed}"
-                                RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
-                                <TextBlock Classes="CaptionText" Text="MAINTENANCE MODE" />
-                                <TextBlock Grid.Row="1"
-                                           Classes="PageTitle"
-                                           Margin="0,8,0,18"
-                                           Text="MyAvaloniaApp is already installed" />
-                                <TextBlock Grid.Row="2"
-                                           Classes="BodyText"
-                                           Text="{Binding InstalledLocation, StringFormat='Install location: {0}'}" />
-                                <TextBlock Grid.Row="3"
-                                           Classes="BodyText"
-                                           Margin="0,8,0,22"
-                                           Text="{Binding InstalledVersion, StringFormat='Installed version: {0}'}" />
-                                <Grid Grid.Row="4" ColumnDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="10">
-                                    <Button Content="Upgrade"
-                                            Command="{Binding UpgradeCommand}" />
-                                    <Button Grid.Column="1"
-                                            Content="Repair"
-                                            Command="{Binding RepairCommand}" />
-                                    <Button Grid.Column="2"
-                                            Content="Uninstall"
-                                            Classes="primary"
-                                            Command="{Binding ShowUninstallCommand}" />
-                                    <Button Grid.Column="3"
-                                            Content="Cancel"
-                                            Command="{Binding CancelCommand}" />
+                            </Border>
+                            <Border Classes="StepItem inactive"
+                                    IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=!Welcome}">
+                                <Grid ColumnDefinitions="24,*" ColumnSpacing="12">
+                                    <Border Classes="StepDot inactive">
+                                        <TextBlock Classes="StepNumber inactive" Text="1" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Welcome" />
                                 </Grid>
-                                <Border Grid.Row="5"
-                                        Margin="0,18,0,0"
-                                        Padding="14"
-                                        CornerRadius="4"
-                                        Background="#FFF3EF"
-                                        BorderBrush="#E3A08C"
-                                        BorderThickness="1"
-                                        IsVisible="{Binding HasError}">
-                                    <TextBlock Text="{Binding ErrorMessage}"
-                                               Foreground="#8B2F22"
-                                               TextWrapping="Wrap" />
-                                </Border>
-                            </Grid>
+                            </Border>
 
-                            <Grid
-                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=UninstallConfirm}"
-                                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
-                                <TextBlock Classes="CaptionText" Text="UNINSTALL" />
-                                <TextBlock Grid.Row="1"
-                                           Classes="PageTitle"
-                                           Margin="0,8,0,18"
-                                           Text="{Binding InstalledAppName, StringFormat='Uninstall {0}'}" />
-                                <TextBlock Grid.Row="2"
-                                           Classes="BodyText"
-                                           Text="{Binding InstalledLocation, StringFormat='Install location: {0}'}" />
-                                <TextBlock Grid.Row="3"
-                                           Classes="BodyText"
-                                           Margin="0,8,0,18"
-                                           Text="{Binding InstalledVersion, StringFormat='Current version: {0}'}" />
-                                <CheckBox Grid.Row="4"
-                                          Content="Keep user configuration and logs"
-                                          IsChecked="{Binding PreserveUserData}" />
-                                <Grid Grid.Row="5" Margin="0,22,0,0" ColumnDefinitions="Auto,Auto" ColumnSpacing="10">
-                                    <Button Content="Uninstall"
-                                            Classes="primary"
-                                            Command="{Binding StartUninstallCommand}" />
-                                    <Button Grid.Column="1"
-                                            Content="Cancel"
-                                            Command="{Binding CancelCommand}" />
+                            <Border Classes="StepItem active"
+                                    IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Path}">
+                                <Grid ColumnDefinitions="24,*" ColumnSpacing="12">
+                                    <Border Classes="StepDot active">
+                                        <TextBlock Classes="StepNumber active" Text="2" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Install folder" />
                                 </Grid>
-                                <Border Grid.Row="6"
-                                        Margin="0,18,0,0"
-                                        Padding="14"
-                                        CornerRadius="4"
-                                        Background="#FFF3EF"
-                                        BorderBrush="#E3A08C"
-                                        BorderThickness="1"
-                                        IsVisible="{Binding HasError}">
-                                    <TextBlock Text="{Binding ErrorMessage}"
-                                               Foreground="#8B2F22"
-                                               TextWrapping="Wrap" />
-                                </Border>
-                            </Grid>
+                            </Border>
+                            <Border Classes="StepItem inactive"
+                                    IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=!Path}">
+                                <Grid ColumnDefinitions="24,*" ColumnSpacing="12">
+                                    <Border Classes="StepDot inactive">
+                                        <TextBlock Classes="StepNumber inactive" Text="2" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Install folder" />
+                                </Grid>
+                            </Border>
 
-                            <Grid
-                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=UninstallProgress}"
-                                RowDefinitions="Auto,Auto,Auto,Auto,*">
-                                <TextBlock Classes="CaptionText" Text="UNINSTALLING" />
-                                <TextBlock Grid.Row="1"
-                                           Classes="PageTitle"
-                                           Margin="0,8,0,18"
-                                           Text="{Binding InstalledAppName, StringFormat='Removing {0}'}" />
-                                <TextBlock Grid.Row="2"
-                                           Classes="BodyText"
-                                           Margin="0,0,0,26"
-                                           Text="{Binding UninstallStatusText}" />
-                                <ProgressBar Grid.Row="3"
-                                             Minimum="0"
-                                             Maximum="100"
-                                             Height="12"
-                                             Value="{Binding UninstallProgressPercent}" />
-                                <TextBlock Grid.Row="4"
-                                           Margin="0,12,0,0"
-                                           Text="{Binding UninstallProgressPercent, StringFormat='{}{0}%'}"
-                                           Foreground="#152934"
-                                           FontWeight="SemiBold" />
-                            </Grid>
+                            <Border Classes="StepItem active"
+                                    IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Installing}">
+                                <Grid ColumnDefinitions="24,*" ColumnSpacing="12">
+                                    <Border Classes="StepDot active">
+                                        <TextBlock Classes="StepNumber active" Text="3" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Installing" />
+                                </Grid>
+                            </Border>
+                            <Border Classes="StepItem inactive"
+                                    IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=!Installing}">
+                                <Grid ColumnDefinitions="24,*" ColumnSpacing="12">
+                                    <Border Classes="StepDot inactive">
+                                        <TextBlock Classes="StepNumber inactive" Text="3" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Installing" />
+                                </Grid>
+                            </Border>
 
-                            <Grid
-                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=UninstallComplete}"
-                                RowDefinitions="Auto,Auto,Auto,Auto,*">
-                                <TextBlock Classes="CaptionText" Text="FINISHED" />
-                                <TextBlock Grid.Row="1"
-                                           Classes="PageTitle"
-                                           Margin="0,8,0,18"
-                                           Text="Uninstall complete" />
-                                <TextBlock Grid.Row="2"
-                                           Classes="BodyText"
-                                           Text="The application has been removed. Any selected preserved data was left in place." />
-                                <TextBlock Grid.Row="3"
-                                           Classes="BodyText"
-                                           Margin="0,12,0,0"
-                                           Text="{Binding UninstallLogPath, StringFormat='Log: {0}'}" />
-                            </Grid>
-                        </Grid>
+                            <Border Classes="StepItem active"
+                                    IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Completed}">
+                                <Grid ColumnDefinitions="24,*" ColumnSpacing="12">
+                                    <Border Classes="StepDot active">
+                                        <TextBlock Classes="StepNumber active" Text="4" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Classes="StepLabel active" Text="Completed" />
+                                </Grid>
+                            </Border>
+                            <Border Classes="StepItem inactive"
+                                    IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=!Completed}">
+                                <Grid ColumnDefinitions="24,*" ColumnSpacing="12">
+                                    <Border Classes="StepDot inactive">
+                                        <TextBlock Classes="StepNumber inactive" Text="4" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Classes="StepLabel inactive" Text="Completed" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" Background="#FFFFFF">
+                    <ContentControl Content="{Binding ActivePage}"
+                                    Margin="34,30" />
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="2"
+                    Classes="TipDock"
+                    IsVisible="{Binding HasError}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Border Width="24"
+                            Height="24"
+                            CornerRadius="12"
+                            Background="#E05A47"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="!"
+                                   Foreground="#FFFFFF"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
                     </Border>
+                    <StackPanel Grid.Column="1"
+                                Spacing="2"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="Warning / Error"
+                                   Foreground="#8B2F22"
+                                   FontSize="11"
+                                   FontWeight="Bold" />
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="#6F2A1F"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   MaxLines="2" />
+                    </StackPanel>
+                    <Button Grid.Column="2"
+                            Classes="tipClose"
+                            Content="×"
+                            Command="{Binding ClearErrorCommand}" />
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="3"
+                    Background="#F8FAFC"
+                    BorderBrush="#D8E1E7"
+                    BorderThickness="0,1,0,0"
+                    Padding="28,0">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="BOOTSTRAPPER MODE / EXTERNAL PAYLOAD"
+                               Foreground="#64748B"
+                               FontSize="11"
+                               VerticalAlignment="Center" />
+
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                Spacing="8"
+                                VerticalAlignment="Center">
+                        <Button Content="Cancel"
+                                Command="{Binding CancelCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Welcome}" />
+                        <Button Content="Cancel"
+                                Command="{Binding CancelCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Path}" />
+                        <Button Content="Back"
+                                Command="{Binding BackCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Path}" />
+                        <Button Content="Next"
+                                Classes="primary"
+                                Command="{Binding NextCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Welcome}" />
+                        <Button Content="Install"
+                                Classes="primary"
+                                Command="{Binding InstallCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Path}" />
+                        <Button Content="Finish"
+                                Classes="primary"
+                                Command="{Binding FinishCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Completed}" />
+                        <Button Content="Upgrade"
+                                Command="{Binding UpgradeCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Installed}" />
+                        <Button Content="Repair"
+                                Command="{Binding RepairCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Installed}" />
+                        <Button Content="Uninstall"
+                                Classes="danger"
+                                Command="{Binding ShowUninstallCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Installed}" />
+                        <Button Content="Close"
+                                Command="{Binding CancelCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Installed}" />
+                        <Button Content="Uninstall"
+                                Classes="danger"
+                                Command="{Binding StartUninstallCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=UninstallConfirm}" />
+                        <Button Content="Cancel"
+                                Command="{Binding CancelCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=UninstallConfirm}" />
+                        <Button Content="Close"
+                                Classes="primary"
+                                Command="{Binding CancelCommand}"
+                                IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=UninstallComplete}" />
+                    </StackPanel>
                 </Grid>
             </Border>
         </Grid>
-
-        <!-- 底部命令栏固定放置导航按钮，便于后续扩展取消、日志等操作。 -->
-        <Border Grid.Row="1"
-                Background="#F7FAFB"
-                BorderBrush="#C7D3D9"
-                BorderThickness="0,1,0,0"
-                Padding="24,16">
-            <Grid ColumnDefinitions="*,Auto,Auto,Auto">
-                <TextBlock Classes="CaptionText"
-                           VerticalAlignment="Center"
-                           Text="BOOTSTRAPPER MODE · EXTERNAL PAYLOAD" />
-                <Button Grid.Column="1"
-                        Content="Back"
-                        Margin="0,0,8,0"
-                        Command="{Binding BackCommand}"
-                        d:IsVisible=""
-                        IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Directory}" />
-                <Button Grid.Column="2"
-                        Content="Next"
-                        Classes="primary"
-                        Margin="0,0,8,0"
-                        Command="{Binding NextCommand}"
-                        IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Welcome}" />
-                <Button Grid.Column="2"
-                        Content="Install"
-                        Classes="primary"
-                        Margin="0,0,8,0"
-                        Command="{Binding InstallCommand}"
-                        IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=Directory}" />
-                <Button Grid.Column="3"
-                        Content="Finish"
-                        Classes="primary"
-                        Command="{Binding FinishCommand}"
-                        IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=InstallComplete}" />
-                <Button Grid.Column="3"
-                        Content="Close"
-                        Classes="primary"
-                        Command="{Binding CancelCommand}"
-                        IsVisible="{Binding CurrentPage, Converter={StaticResource StateVisibilityConverter}, ConverterParameter=UninstallComplete}" />
-            </Grid>
-        </Border>
-    </Grid>
+    </Border>
 </Window>

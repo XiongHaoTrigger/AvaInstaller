@@ -1,0 +1,9 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- 安装器主题入口文件：App.axaml 只引入本文件，具体样式按职责拆分。 -->
+    <StyleInclude Source="avares://MyAvaloniaAppInstaller/Styles/Colors.axaml" />
+    <StyleInclude Source="avares://MyAvaloniaAppInstaller/Styles/Typography.axaml" />
+    <StyleInclude Source="avares://MyAvaloniaAppInstaller/Styles/Buttons.axaml" />
+    <StyleInclude Source="avares://MyAvaloniaAppInstaller/Styles/Inputs.axaml" />
+    <StyleInclude Source="avares://MyAvaloniaAppInstaller/Styles/Cards.axaml" />
+    <StyleInclude Source="avares://MyAvaloniaAppInstaller/Styles/Sidebar.axaml" />
+</Styles>

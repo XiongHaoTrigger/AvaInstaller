@@ -11,8 +11,16 @@ namespace AvaInstaller.Services;
 /// 因为 .NET 不提供原生的快捷方式创建 API。
 /// 仅在 Windows 平台生效。
 /// </summary>
-public sealed class ShortcutService
+public sealed class ShortcutService : IShortcutService
 {
+    /// <inheritdoc />
+    public Task CreateAsync(InstallManifest manifest, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        CreateShortcuts(manifest.InstallLocation);
+        return Task.CompletedTask;
+    }
+
     /// <summary>
     /// 在开始菜单中创建快捷方式。
     /// 创建以下快捷方式：

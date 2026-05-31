@@ -1,0 +1,36 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- 表单容器卡片。 -->
+    <Style Selector="Border.FormPanel">
+        <Setter Property="Background" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#D8E1E7" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="18" />
+    </Style>
+
+    <!-- 普通提示卡片。 -->
+    <Style Selector="Border.CalloutPanel">
+        <Setter Property="Background" Value="#F8FAFC" />
+        <Setter Property="BorderBrush" Value="#D8E1E7" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="14" />
+    </Style>
+
+    <!-- 指标卡片。 -->
+    <Style Selector="Border.MetricTile">
+        <Setter Property="Background" Value="#F8FAFC" />
+        <Setter Property="BorderBrush" Value="#D8E1E7" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="14" />
+    </Style>
+
+    <!-- 底部错误/警告提示条。 -->
+    <Style Selector="Border.TipDock">
+        <Setter Property="Background" Value="#FFF3EF" />
+        <Setter Property="BorderBrush" Value="#E05A47" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="28,10" />
+    </Style>
+</Styles>

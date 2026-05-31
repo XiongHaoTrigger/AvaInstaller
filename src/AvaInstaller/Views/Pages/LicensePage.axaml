@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AvaInstaller.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="652"
+             d:DesignHeight="456"
+             x:Class="AvaInstaller.Views.Pages.LicensePage"
+             x:DataType="vm:LicensePageViewModel">
+    <Design.DataContext>
+        <vm:LicensePageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+        <TextBlock Classes="SectionKicker" Text="LICENSE AGREEMENT" />
+        <TextBlock Grid.Row="1"
+                   Classes="PageTitle"
+                   Margin="0,8,0,12"
+                   Text="Review license terms" />
+        <TextBlock Grid.Row="2"
+                   Classes="BodyText"
+                   Margin="0,0,0,18"
+                   Text="{Binding LicenseSummary}" />
+        <Border Grid.Row="3" Classes="FormPanel">
+            <TextBlock Classes="BodyText"
+                       Text="License content can be loaded from a bundled resource when this step is enabled in the installer flow." />
+        </Border>
+        <CheckBox Grid.Row="4"
+                  Margin="0,18,0,0"
+                  Content="I accept the license agreement"
+                  IsChecked="{Binding IsAccepted}" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AvaInstaller.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="652"
+             d:DesignHeight="456"
+             x:Class="AvaInstaller.Views.Pages.UninstallCompletePage"
+             x:DataType="vm:UninstallCompletePageViewModel">
+    <Design.DataContext>
+        <vm:UninstallCompletePageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+        <TextBlock Classes="SectionKicker" Text="FINISHED" />
+        <TextBlock Grid.Row="1"
+                   Classes="PageTitle"
+                   Margin="0,8,0,12"
+                   Text="Uninstall complete" />
+        <TextBlock Grid.Row="2"
+                   Classes="BodyText"
+                   Text="The application has been removed. Any selected preserved data was left in place." />
+        <Border Grid.Row="3" Classes="FormPanel" Margin="0,18,0,0">
+            <Grid ColumnDefinitions="70,*">
+                <TextBlock Classes="FieldLabel" Text="LOG" />
+                <TextBlock Grid.Column="1"
+                           Text="{Binding UninstallLogPath}"
+                           TextTrimming="CharacterEllipsis" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

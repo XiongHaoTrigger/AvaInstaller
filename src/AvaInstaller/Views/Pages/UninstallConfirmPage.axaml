@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AvaInstaller.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="652"
+             d:DesignHeight="456"
+             x:Class="AvaInstaller.Views.Pages.UninstallConfirmPage"
+             x:DataType="vm:UninstallConfirmPageViewModel">
+    <Design.DataContext>
+        <vm:UninstallConfirmPageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+        <TextBlock Classes="SectionKicker" Text="UNINSTALL" />
+        <TextBlock Grid.Row="1"
+                   Classes="PageTitle"
+                   Margin="0,8,0,12"
+                   Text="{Binding InstalledAppName, StringFormat='Uninstall {0}'}" />
+        <Border Grid.Row="2" Classes="FormPanel" Margin="0,0,0,16">
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="150,*" RowSpacing="10">
+                <TextBlock Classes="FieldLabel" Text="INSTALL LOCATION" />
+                <TextBlock Grid.Column="1"
+                           Text="{Binding InstalledLocation}"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Row="1" Classes="FieldLabel" Text="CURRENT VERSION" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding InstalledVersion}" />
+            </Grid>
+        </Border>
+        <CheckBox Grid.Row="3"
+                  Content="Keep user configuration and logs"
+                  IsChecked="{Binding PreserveUserData}" />
+        <Border Grid.Row="4" Classes="CalloutPanel" Margin="0,18,0,0">
+            <TextBlock Classes="BodyText"
+                       FontSize="12"
+                       Text="Application files and shortcuts will be removed. Preserved user data remains in its configured location." />
+        </Border>
+    </Grid>
+</UserControl>

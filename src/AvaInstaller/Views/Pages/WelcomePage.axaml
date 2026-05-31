@@ -1,0 +1,104 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AvaInstaller.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="652"
+             d:DesignHeight="456"
+             x:Class="AvaInstaller.Views.Pages.WelcomePage"
+             x:DataType="vm:WelcomePageViewModel">
+    <Design.DataContext>
+        <vm:WelcomePageViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="*,236">
+        <StackPanel VerticalAlignment="Center"
+                    Spacing="18"
+                    Margin="2,0,28,0">
+            <TextBlock Classes="SectionKicker" Text="INSTALLATION WIZARD" />
+            <TextBlock Classes="PageTitle" Text="Welcome to the Setup Wizard" />
+            <TextBlock Classes="BodyText"
+                       Text="{Binding AppName, StringFormat='This wizard will configure and install {0} on this workstation. Files are deployed from the bundled payload into the selected destination folder.'}" />
+            <Border Classes="CalloutPanel">
+                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="4,*" ColumnSpacing="14">
+                    <Border Background="#00828C" CornerRadius="2" />
+                    <TextBlock Grid.Column="1"
+                               Text="Recommended before continuing"
+                               Foreground="#1E293B"
+                               FontSize="13"
+                               FontWeight="SemiBold" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="0,6,0,0"
+                               Classes="BodyText"
+                               FontSize="12"
+                               LineHeight="20"
+                               Text="Close running application instances and engineering tools so the installer can update files without locks." />
+                </Grid>
+            </Border>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border Classes="MetricTile">
+                    <StackPanel Spacing="6">
+                        <TextBlock Classes="MetricLabel" Text="SIGNED PAYLOAD" />
+                        <TextBlock Classes="MetricValue" Text="READY" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Classes="MetricTile">
+                    <StackPanel Spacing="6">
+                        <TextBlock Classes="MetricLabel" Text="VERSION" />
+                        <TextBlock Classes="MetricValue" Text="{Binding Version}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+
+        <Border Grid.Column="1"
+                Background="#F8FAFC"
+                BorderBrush="#E2E8F0"
+                BorderThickness="1,0,0,0"
+                Padding="24">
+            <Grid>
+                <Border Background="#FFFFFF"
+                        BorderBrush="#D6E0E6"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                    <Grid>
+                        <Grid RowDefinitions="*,*,*,*,*,*,*,*,*"
+                              ColumnDefinitions="*,*,*,*,*,*"
+                              Opacity="0.5">
+                            <Border Grid.Row="0" Grid.ColumnSpan="6" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" />
+                            <Border Grid.Row="2" Grid.ColumnSpan="6" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" />
+                            <Border Grid.Row="4" Grid.ColumnSpan="6" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" />
+                            <Border Grid.Row="6" Grid.ColumnSpan="6" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" />
+                            <Border Grid.Column="1" Grid.RowSpan="9" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0" />
+                            <Border Grid.Column="3" Grid.RowSpan="9" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0" />
+                            <Border Grid.Column="5" Grid.RowSpan="9" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0" />
+                        </Grid>
+
+                        <Canvas>
+                            <Line StartPoint="28,164" EndPoint="176,48" Stroke="#003C71" StrokeThickness="2" />
+                            <Line StartPoint="40,68" EndPoint="180,182" Stroke="#00828C" StrokeThickness="2" StrokeDashArray="4,3" />
+                            <Ellipse Canvas.Left="24" Canvas.Top="158" Width="10" Height="10" Fill="#00828C" />
+                            <Ellipse Canvas.Left="171" Canvas.Top="43" Width="12" Height="12" Fill="#003C71" />
+                            <Ellipse Canvas.Left="35" Canvas.Top="63" Width="10" Height="10" Fill="#0F766E" />
+                            <Ellipse Canvas.Left="175" Canvas.Top="177" Width="10" Height="10" Fill="#00828C" />
+                        </Canvas>
+
+                        <Border HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                Margin="14"
+                                Background="#0F172A"
+                                CornerRadius="3"
+                                Padding="8,4">
+                            <TextBlock Text="MODEL ID: 0xFF19AD"
+                                       Foreground="#E2E8F0"
+                                       FontSize="10"
+                                       FontFamily="Consolas" />
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

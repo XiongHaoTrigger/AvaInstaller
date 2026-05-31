@@ -1,0 +1,3 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- 项目统一色板。Avalonia 11 当前样式中直接使用十六进制颜色，集中保留色值便于后续替换为资源键。 -->
+</Styles>

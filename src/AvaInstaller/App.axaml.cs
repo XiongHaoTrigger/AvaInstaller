@@ -67,12 +67,17 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.AddSingleton<IPayloadExtractor, PayloadExtractor>();
         services.AddSingleton<IFolderPickerService, FolderPickerService>();
+        services.AddSingleton<IDiskService, DiskService>();
+        services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<InstallManifestService>();
+        services.AddSingleton<IManifestService, ManifestService>();
         services.AddSingleton<InstallStateService>();
         services.AddSingleton<ShortcutService>();
+        services.AddSingleton<IShortcutService>(provider => provider.GetRequiredService<ShortcutService>());
         services.AddSingleton<SelfDeleteService>();
         services.AddSingleton<UninstallService>();
         services.AddSingleton<InstallCompletionService>();
+        services.AddSingleton<IInstallerService, InstallerService>();
         services.AddTransient<MainWindowViewModel>();
         return services.BuildServiceProvider();
     }

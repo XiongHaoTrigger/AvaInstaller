@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AvaInstaller.ViewModels.Pages"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="652"
+             d:DesignHeight="456"
+             x:Class="AvaInstaller.Views.Pages.InstallingPage"
+             x:DataType="vm:InstallingPageViewModel">
+    <Design.DataContext>
+        <vm:InstallingPageViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
+        <TextBlock Classes="SectionKicker" Text="DEPLOYMENT" />
+        <TextBlock Grid.Row="1"
+                   Classes="PageTitle"
+                   Margin="0,8,0,12"
+                   Text="{Binding AppName, StringFormat='Installing {0}'}" />
+        <TextBlock Grid.Row="2"
+                   Classes="BodyText"
+                   Margin="0,0,0,24"
+                   Text="{Binding StatusText}" />
+
+        <ProgressBar Grid.Row="3"
+                     Minimum="0"
+                     Maximum="100"
+                     Height="12"
+                     Value="{Binding ProgressPercent}" />
+
+        <Border Grid.Row="4" Classes="FormPanel" Margin="0,18,0,0">
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                <Border Width="9"
+                        Height="9"
+                        CornerRadius="4.5"
+                        Background="#00828C"
+                        VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1"
+                           Text="Live extraction stream"
+                           Foreground="#1E293B"
+                           FontWeight="SemiBold" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Margin="0,8,0,0"
+                           Text="{Binding CurrentFile}"
+                           Foreground="#64748B"
+                           FontFamily="Consolas"
+                           TextTrimming="CharacterEllipsis" />
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="5"
+                   Text="{Binding ProgressPercent, StringFormat='{}{0}% complete'}"
+                   Foreground="#003C71"
+                   FontWeight="SemiBold" />
+    </Grid>
+</UserControl>

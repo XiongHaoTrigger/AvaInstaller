@@ -1,0 +1,20 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- 文本输入框样式：安装路径等输入统一使用等宽字体，便于阅读文件路径。 -->
+    <Style Selector="TextBox">
+        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="#F8FAFC" />
+        <Setter Property="BorderBrush" Value="#CBD5E1" />
+        <Setter Property="Foreground" Value="#0F172A" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="FontFamily" Value="Consolas" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- 进度条样式：用于安装和卸载进度。 -->
+    <Style Selector="ProgressBar">
+        <Setter Property="Foreground" Value="#00828C" />
+        <Setter Property="Background" Value="#D8E1E7" />
+    </Style>
+</Styles>
